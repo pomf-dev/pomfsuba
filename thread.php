@@ -45,8 +45,93 @@ if (!$board) {
 
 $showCountryFlags =
     strtolower(
-        (string) $board['slug']
+        (string) ($board['slug'] ?? '')
     ) === 'int';
+
+/*
+ * ------------------------------------------------------------
+ * Safe file metadata helpers
+ * ------------------------------------------------------------
+ *
+ * thread.php must not assume that get_file_info() always
+ * contains width, height, size, or name.
+ */
+
+function thread_format_file_size(int $bytes): string
+{
+    if ($bytes < 0) {
+        $bytes = 0;
+    }
+
+    if ($bytes < 1024) {
+        return $bytes . ' B';
+    }
+
+    if ($bytes < 1024 * 1024) {
+        return number_format(
+            $bytes / 1024,
+            1
+        ) . ' KB';
+    }
+
+    if ($bytes < 1024 * 1024 * 1024) {
+        return number_format(
+            $bytes / (1024 * 1024),
+            1
+        ) . ' MB';
+    }
+
+    return number_format(
+        $bytes / (1024 * 1024 * 1024),
+        1
+    ) . ' GB';
+}
+
+function thread_file_info(string $imageName): array
+{
+    $fallback = [
+        'name' => basename($imageName),
+        'size' => 0,
+        'width' => null,
+        'height' => null
+    ];
+
+    try {
+        $info = get_file_info($imageName);
+    } catch (Throwable $e) {
+        return $fallback;
+    }
+
+    if (!is_array($info)) {
+        return $fallback;
+    }
+
+    return [
+        'name' =>
+            isset($info['name']) &&
+            is_scalar($info['name'])
+                ? (string) $info['name']
+                : $fallback['name'],
+
+        'size' =>
+            isset($info['size']) &&
+            is_numeric($info['size'])
+                ? max(0, (int) $info['size'])
+                : 0,
+
+        'width' =>
+            isset($info['width']) &&
+            is_numeric($info['width'])
+                ? max(0, (int) $info['width'])
+                : null,
+
+        'height' =>
+            isset($info['height']) &&
+            is_numeric($info['height'])
+                ? max(0, (int) $info['height'])
+                : null
+    ];
+}
 
 /*
  * ------------------------------------------------------------
@@ -408,9 +493,6 @@ page_header(
     vertical-align: top;
 }
 
-/*
- * OP remains full width.
- */
 .thread-posts .post.op {
     display: block;
     width: 100%;
@@ -423,9 +505,6 @@ page_header(
     clear: both;
 }
 
-/*
- * Wakaba-style replies.
- */
 .thread-posts .post.reply {
     display: block;
     width: fit-content;
@@ -522,9 +601,6 @@ page_header(
     opacity: 0.8;
 }
 
-/*
- * File / body layout.
- */
 .thread-posts .post-content {
     display: flow-root;
     width: 100%;
@@ -616,9 +692,6 @@ page_header(
     outline-offset: 2px;
 }
 
-/*
- * Report dialog.
- */
 .report-dialog {
     position: fixed;
     left: 50%;
@@ -711,10 +784,6 @@ page_header(
     background: #f2dddd;
 }
 
-/*
- * Reply form.
- * This remains the same style as the canonical thread reply form.
- */
 .reply-form-container {
     width: 100%;
     max-width: 750px;
@@ -749,9 +818,6 @@ page_header(
     margin-right: 5px;
 }
 
-/*
- * Markup.
- */
 .markup-greentext {
     color: #789922;
 }
@@ -906,9 +972,9 @@ page_header(
 
     <h2>
         <a
-            href="/<?= rawurlencode($board['slug']) ?>/"
+            href="/<?= rawurlencode((string) $board['slug']) ?>/"
         >
-            /<?= h($board['slug']) ?>/
+            /<?= h((string) $board['slug']) ?>/
         </a>
     </h2>
 
@@ -1085,9 +1151,18 @@ page_header(
 
             <?php
             $fileInfo =
-                get_file_info(
+                thread_file_info(
                     $imageName
                 );
+
+            $fileWidth =
+                $fileInfo['width'];
+
+            $fileHeight =
+                $fileInfo['height'];
+
+            $fileSize =
+                (int) $fileInfo['size'];
             ?>
 
             <div class="post-image">
@@ -1104,24 +1179,26 @@ page_header(
                         rel="noopener"
                     >
                         <?= h(
-                            $fileInfo['name']
+                            (string) $fileInfo['name']
                         ) ?>
                     </a>
 
                     <?php if (
-                        $fileInfo['width'] !== null &&
-                        $fileInfo['height'] !== null
+                        $fileWidth !== null &&
+                        $fileHeight !== null &&
+                        $fileWidth > 0 &&
+                        $fileHeight > 0
                     ): ?>
 
                         <span>
                             (
-                            <?= (int) $fileInfo['width'] ?>
+                            <?= $fileWidth ?>
                             x
-                            <?= (int) $fileInfo['height'] ?>
+                            <?= $fileHeight ?>
                             ,
                             <?= h(
-                                format_file_size(
-                                    $fileInfo['size']
+                                thread_format_file_size(
+                                    $fileSize
                                 )
                             ) ?>
                             )
@@ -1132,8 +1209,8 @@ page_header(
                         <span>
                             (
                             <?= h(
-                                format_file_size(
-                                    $fileInfo['size']
+                                thread_format_file_size(
+                                    $fileSize
                                 )
                             ) ?>
                             )
@@ -1300,7 +1377,6 @@ page_header(
 
         <?php endif; ?>
 
-        <!-- KEEP REPORT IMAGE DIRECTLY AFTER [Reply] -->
         <a
             href="#"
             class="report-link"
@@ -1335,9 +1411,18 @@ page_header(
 
         <?php
         $fileInfo =
-            get_file_info(
+            thread_file_info(
                 $imageName
             );
+
+        $fileWidth =
+            $fileInfo['width'];
+
+        $fileHeight =
+            $fileInfo['height'];
+
+        $fileSize =
+            (int) $fileInfo['size'];
         ?>
 
         <div class="post-image">
@@ -1354,24 +1439,26 @@ page_header(
                     rel="noopener"
                 >
                     <?= h(
-                        $fileInfo['name']
+                        (string) $fileInfo['name']
                     ) ?>
                 </a>
 
                 <?php if (
-                    $fileInfo['width'] !== null &&
-                    $fileInfo['height'] !== null
+                    $fileWidth !== null &&
+                    $fileHeight !== null &&
+                    $fileWidth > 0 &&
+                    $fileHeight > 0
                 ): ?>
 
                     <span>
                         (
-                        <?= (int) $fileInfo['width'] ?>
+                        <?= $fileWidth ?>
                         x
-                        <?= (int) $fileInfo['height'] ?>
+                        <?= $fileHeight ?>
                         ,
                         <?= h(
-                            format_file_size(
-                                $fileInfo['size']
+                            thread_format_file_size(
+                                $fileSize
                             )
                         ) ?>
                         )
@@ -1382,8 +1469,8 @@ page_header(
                     <span>
                         (
                         <?= h(
-                            format_file_size(
-                                $fileInfo['size']
+                            thread_format_file_size(
+                                $fileSize
                             )
                         ) ?>
                         )
@@ -1460,7 +1547,7 @@ page_header(
         <input
             type="hidden"
             name="board"
-            value="<?= h($board['slug']) ?>"
+            value="<?= h((string) $board['slug']) ?>"
         >
 
         <input
@@ -1472,11 +1559,8 @@ page_header(
         <table class="postForm">
 
             <tr>
-
                 <th class="postblock"></th>
-
                 <td>
-
                     <input
                         type="text"
                         id="reply-name"
@@ -1484,17 +1568,12 @@ page_header(
                         maxlength="80"
                         placeholder="Name"
                     >
-
                 </td>
-
             </tr>
 
             <tr>
-
                 <th class="postblock"></th>
-
                 <td>
-
                     <textarea
                         id="reply-body"
                         name="body"
@@ -1503,34 +1582,24 @@ page_header(
                         required
                         placeholder="Message"
                     ></textarea>
-
                 </td>
-
             </tr>
 
             <tr>
-
                 <th class="postblock"></th>
-
                 <td>
-
                     <input
                         type="file"
                         id="reply-file"
                         name="file"
                         accept="image/jpeg,image/png,image/gif,image/webp"
                     >
-
                 </td>
-
             </tr>
 
             <tr>
-
                 <th class="postblock"></th>
-
                 <td>
-
                     <input
                         type="text"
                         id="reply-password"
@@ -1538,17 +1607,12 @@ page_header(
                         maxlength="100"
                         placeholder="Password"
                     >
-
                 </td>
-
             </tr>
 
             <tr>
-
                 <th class="postblock"></th>
-
                 <td>
-
                     <button type="submit">
                         Reply
                     </button>
@@ -1556,9 +1620,7 @@ page_header(
                     <button type="reset">
                         Clear
                     </button>
-
                 </td>
-
             </tr>
 
         </table>
@@ -1633,7 +1695,7 @@ page_header(
             <input
                 type="hidden"
                 name="board"
-                value="<?= h($board['slug']) ?>"
+                value="<?= h((string) $board['slug']) ?>"
             >
 
             <input
@@ -1953,10 +2015,6 @@ page_header(
         );
     }
 
-    /*
-     * These are kept global so the Wakaba-style
-     * onclick handlers work correctly.
-     */
     window.highlightReply =
         function (postId)
         {
@@ -2038,9 +2096,6 @@ page_header(
                 replyBody.value.length;
         };
 
-    /*
-     * Report system.
-     */
     var reportDialog =
         document.getElementById(
             'report-dialog'
@@ -2232,9 +2287,6 @@ page_header(
         }
     );
 
-    /*
-     * Refresh / auto reload.
-     */
     if (refreshButton) {
 
         refreshButton.addEventListener(
@@ -2257,9 +2309,6 @@ page_header(
 
     }
 
-    /*
-     * Reply links.
-     */
     document.addEventListener(
         'click',
         function (event) {
@@ -2359,9 +2408,6 @@ page_header(
         }
     );
 
-    /*
-     * Post number links.
-     */
     document.addEventListener(
         'click',
         function (event) {
@@ -2398,9 +2444,6 @@ page_header(
         }
     );
 
-    /*
-     * Image expansion.
-     */
     document.addEventListener(
         'click',
         function (event) {
