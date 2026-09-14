@@ -367,6 +367,42 @@ page_header(
 
     </tr>
 
+<?php if (!is_admin()): ?>
+
+    <tr>
+
+        <th class="postblock"></th>
+
+        <td>
+
+            <div class="captcha-box">
+
+                <img
+                    src="/captcha.php"
+                    alt="CAPTCHA"
+                    class="captcha-image"
+                    title="CAPTCHA"
+                >
+
+                <br>
+
+                <input
+                    type="text"
+                    name="captcha"
+                    maxlength="5"
+                    autocomplete="off"
+                    placeholder="Enter CAPTCHA"
+                    required
+                >
+
+            </div>
+
+        </td>
+
+    </tr>
+
+<?php endif; ?>
+
     <tr>
 
         <th class="postblock"></th>
@@ -1068,6 +1104,17 @@ href="/<?= rawurlencode($board['slug']) ?>/"
 
 </table>
 
+<?php if (!is_admin()): ?>
+
+<input
+    type="hidden"
+    name="captcha"
+    class="quick-reply-captcha"
+    value=""
+>
+
+<?php endif; ?>
+
 <input
 type="hidden"
 name="csrf"
@@ -1190,6 +1237,25 @@ value=""
     cursor: pointer;
 }
 
+.captcha-box {
+    margin-top: 4px;
+}
+
+.captcha-image {
+    display: block;
+    width: 180px;
+    height: 55px;
+    margin-bottom: 4px;
+    cursor: default;
+    border: 1px solid #aaa;
+}
+
+.captcha-box input[name="captcha"] {
+    width: 180px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
 .board-search-area {
     width: 100%;
     margin: 0;
@@ -1278,7 +1344,6 @@ value=""
 
 .country-flag {
     display: inline-block;
-    width: 18px;
     height: 12px;
     margin-left: 4px;
     vertical-align: middle;
@@ -1898,6 +1963,33 @@ value=""
                 'form.postform'
             );
 
+        var originalCaptcha =
+            originalForm
+                ? originalForm.querySelector(
+                    'input[name="captcha"]'
+                )
+                : null;
+
+        var quickReplyCaptcha =
+            quickReply.querySelector(
+                '.quick-reply-captcha'
+            );
+
+
+        function syncCaptcha() {
+
+            if (
+                originalCaptcha &&
+                quickReplyCaptcha
+            ) {
+
+                quickReplyCaptcha.value =
+                    originalCaptcha.value;
+
+            }
+
+        }
+
 
         function showQuickReply(threadId, postId) {
 
@@ -1953,6 +2045,8 @@ value=""
 
             }
 
+
+            syncCaptcha();
 
             quickReply.style.display =
                 'block';
@@ -2142,6 +2236,20 @@ value=""
                                 this.value;
 
                         }
+
+                    }
+                );
+
+            }
+
+
+            if (originalCaptcha) {
+
+                originalCaptcha.addEventListener(
+                    'input',
+                    function () {
+
+                        syncCaptcha();
 
                     }
                 );

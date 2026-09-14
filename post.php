@@ -9,6 +9,90 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 verify_csrf();
 
+
+/*
+ * ============================================================
+ * REQUEST TYPE
+ * ============================================================
+ *
+ * A thread_id means this is a reply.
+ *
+ * No thread_id means this is a new thread.
+ * ============================================================
+ */
+
+$threadId =
+    (int) (
+        $_POST['thread_id'] ?? 0
+    );
+
+
+/*
+ * ============================================================
+ * CAPTCHA
+ * ============================================================
+ *
+ * CAPTCHA is required ONLY when creating a new thread.
+ *
+ * Replies do NOT require CAPTCHA.
+ *
+ * Administrators bypass CAPTCHA completely.
+ *
+ * captcha.php stores the generated answer in:
+ *
+ *     $_SESSION['captcha_code']
+ * ============================================================
+ */
+
+if (
+    !is_admin() &&
+    $threadId <= 0
+) {
+
+    $captchaInput =
+        trim(
+            (string) (
+                $_POST['captcha'] ?? ''
+            )
+        );
+
+    $captchaAnswer =
+        trim(
+            (string) (
+                $_SESSION['captcha_code'] ?? ''
+            )
+        );
+
+    if (
+        $captchaAnswer === '' ||
+        $captchaInput === '' ||
+        !hash_equals(
+            strtoupper($captchaAnswer),
+            strtoupper($captchaInput)
+        )
+    ) {
+
+        /*
+         * Remove the old CAPTCHA so it cannot be reused.
+         */
+        unset(
+            $_SESSION['captcha_code']
+        );
+
+        exit(
+            'Invalid CAPTCHA. Please go back and try again.'
+        );
+    }
+
+    /*
+     * CAPTCHA is one-time use.
+     */
+    unset(
+        $_SESSION['captcha_code']
+    );
+}
+
+
 $boardSlug =
     trim(
         (string) (
@@ -16,10 +100,6 @@ $boardSlug =
         )
     );
 
-$threadId =
-    (int) (
-        $_POST['thread_id'] ?? 0
-    );
 
 $name =
     trim(
@@ -28,12 +108,14 @@ $name =
         )
     );
 
+
 $subject =
     trim(
         (string) (
             $_POST['subject'] ?? ''
         )
     );
+
 
 $body =
     trim(
@@ -365,3 +447,4 @@ try {
         '</body>' .
         '</html>';
 }
+?>
