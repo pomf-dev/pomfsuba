@@ -228,6 +228,73 @@ if (
 
 $pdo = db();
 
+/*
+ * ============================================================
+ * ANTI-SPAM RATE LIMIT
+ * ============================================================
+ *
+ * Normal users must wait 10 seconds between posts.
+ *
+ * This applies to both new threads and replies.
+ *
+ * Administrators bypass the rate limit.
+ *
+ * The existing ip_hash() helper is used so the raw IP
+ * address is never stored by this feature.
+ * ============================================================
+ */
+
+if (!is_admin()) {
+
+    $currentIpHash =
+        ip_hash();
+
+    $stmt =
+        $pdo->prepare(
+            'SELECT created_at
+             FROM posts
+             WHERE ip_hash = ?
+             ORDER BY id DESC
+             LIMIT 1'
+        );
+
+    $stmt->execute([
+        $currentIpHash
+    ]);
+
+    $lastPost =
+        $stmt->fetchColumn();
+
+    if ($lastPost !== false) {
+
+        $lastPostTime =
+            strtotime(
+                (string) $lastPost
+            );
+
+        $secondsSinceLastPost =
+            time() - $lastPostTime;
+
+        if (
+            $secondsSinceLastPost < 10
+        ) {
+
+            $wait =
+                10 - $secondsSinceLastPost;
+
+            exit(
+                'You are posting too quickly. ' .
+                'Please wait ' .
+                $wait .
+                ' second' .
+                ($wait === 1 ? '' : 's') .
+                ' before posting again.'
+            );
+        }
+    }
+}
+
+
 
 try {
 
