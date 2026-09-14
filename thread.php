@@ -963,7 +963,7 @@ page_header(
     </h1>
 
     <p>
-        anonymous imageboard
+        soon updated template goes here
     </p>
 
 </div>
@@ -979,8 +979,40 @@ page_header(
     </h2>
 
     <div class="thread-meta">
-        Thread #<?= (int) $thread['id'] ?>
-    </div>
+
+    Thread #<?= (int) $thread['id'] ?>
+
+    <?php if (!empty($thread['pinned'])): ?>
+
+        <span
+            class="thread-icon"
+            title="Pinned"
+        >
+            <img
+                src="/img/sticky.gif"
+                alt="Pinned"
+                class="thread-status-icon"
+            >
+        </span>
+
+    <?php endif; ?>
+
+    <?php if (!empty($thread['locked'])): ?>
+
+        <span
+            class="thread-icon"
+            title="Locked"
+        >
+            <img
+                src="/img/locked.gif"
+                alt="Locked"
+                class="thread-status-icon"
+            >
+        </span>
+
+    <?php endif; ?>
+
+</div>
 
     <div class="thread-controls">
 

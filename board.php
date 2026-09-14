@@ -525,27 +525,35 @@ $op =
 
             </label>
 
-            <?php if (!empty($thread['pinned'])): ?>
+           <?php if (!empty($thread['pinned'])): ?>
 
-                <span
-                    class="thread-icon"
-                    title="Pinned"
-                >
-                    📌
-                </span>
+    <span
+        class="thread-icon"
+        title="Pinned"
+    >
+        <img
+            src="/img/sticky.gif"
+            alt="Pinned"
+            class="thread-status-icon"
+        >
+    </span>
 
-            <?php endif; ?>
+<?php endif; ?>
 
-            <?php if (!empty($thread['locked'])): ?>
+<?php if (!empty($thread['locked'])): ?>
 
-                <span
-                    class="thread-icon"
-                    title="Locked"
-                >
-                    🔒
-                </span>
+    <span
+        class="thread-icon"
+        title="Locked"
+    >
+        <img
+            src="/img/locked.gif"
+            alt="Locked"
+            class="thread-status-icon"
+        >
+    </span>
 
-            <?php endif; ?>
+<?php endif; ?>
 
             <a
                 class="post_no"
