@@ -9,9 +9,13 @@ $boards = db()->query(
      ORDER BY slug'
 )->fetchAll();
 
+
 /*
  * ============================================================
- * LATEST POSTS
+ * LATEST IMAGES SOURCE POSTS
+ * ============================================================
+ *
+ * Fetch recent posts so we can find the newest uploaded images.
  * ============================================================
  */
 
@@ -35,6 +39,7 @@ $recent_posts_stmt = db()->query(
 );
 
 $recent_posts = $recent_posts_stmt->fetchAll();
+
 
 /*
  * ============================================================
@@ -111,108 +116,7 @@ function get_post_image(array $post): ?string
     return null;
 }
 
-/*
- * ============================================================
- * POST DATE
- * ============================================================
- */
 
-function post_date(array $post): string
-{
-    if (!empty($post['created_at'])) {
-        return (string) $post['created_at'];
-    }
-
-    if (!empty($post['date'])) {
-        return (string) $post['date'];
-    }
-
-    return '';
-}
-
-page_header('Home');
-?>
-
-<div class="jumbotron">
-
-
-<h1>
-    pomfIB
-</h1>
-
-<p class="lead">
-    A simple PHP imageboard for anonymous discussion.
-</p>
-
-
-</div>
-
-<div class="alert alert-info">
-
-
-<strong>
-    Boards
-</strong>
-
-<ul>
-
-    <?php foreach ($boards as $board): ?>
-
-        <?php
-        $board_slug =
-            trim(
-                (string) $board['slug']
-            );
-        ?>
-
-        <li>
-
-            <a
-                href="/<?= rawurlencode($board_slug) ?>/"
-            >
-                /<?= h($board_slug) ?>/
-            </a>
-
-            -
-            <?= h($board['name']) ?>
-
-            <?php if (!empty($board['description'])): ?>
-
-                —
-                <?= h($board['description']) ?>
-
-            <?php endif; ?>
-
-        </li>
-
-    <?php endforeach; ?>
-
-</ul>
-
-
-</div>
-
-<div class="alert">
-
-
-<strong>
-    Formatting
-</strong>
-
-<br>
-
-<code>&gt;greentext</code>
-·
-<code>[pink]pink text[/pink]</code>
-·
-<code>[spoiler]hidden text[/spoiler]</code>
-·
-<code>==red text==</code>
-
-
-</div>
-
-<?php
 /*
  * ============================================================
  * LATEST IMAGES
@@ -238,10 +142,85 @@ foreach ($recent_posts as $post) {
         break;
     }
 }
+
+
+page_header('Home');
 ?>
 
-<div class="frontpage-section">
+<div class="jumbotron">
 
+<h1>
+    pomfIB
+</h1>
+
+<p class="lead">
+    A simple PHP imageboard for anonymous discussion.
+</p>
+
+</div>
+
+<div class="alert alert-info">
+
+<strong>
+    Boards
+</strong>
+
+<ul>
+
+```
+<?php foreach ($boards as $board): ?>
+
+    <?php
+    $board_slug =
+        trim(
+            (string) $board['slug']
+        );
+    ?>
+
+    <li>
+
+        <a
+            href="/<?= rawurlencode($board_slug) ?>/"
+        >
+            /<?= h($board_slug) ?>/
+        </a>
+
+        -
+
+        <?= h($board['name']) ?>
+
+        <?php if (!empty($board['description'])): ?>
+
+            —
+            <?= h($board['description']) ?>
+
+        <?php endif; ?>
+
+    </li>
+
+<?php endforeach; ?>
+```
+
+</ul>
+
+</div>
+
+<div class="alert">
+
+<strong>
+    Formatting
+</strong>
+
+<br>
+
+<code>>greentext</code>
+· <code>[pink]pink text[/pink]</code>
+· <code>[spoiler]hidden text[/spoiler]</code>
+· <code>==red text==</code>
+
+</div>
+
+<div class="frontpage-section">
 
 <h2>
     Latest Images
@@ -249,198 +228,76 @@ foreach ($recent_posts as $post) {
 
 <div id="divLatestImages">
 
-    <?php if (!empty($latest_images)): ?>
+```
+<?php if (!empty($latest_images)): ?>
 
-        <div class="latest-images">
+    <div class="latest-images">
 
-            <?php foreach ($latest_images as $item): ?>
+        <?php foreach ($latest_images as $item): ?>
 
-                <?php
+            <?php
 
-                $post =
-                    $item['post'];
+            $post =
+                $item['post'];
 
-                $image =
-                    $item['image'];
+            $image =
+                $item['image'];
 
-                $board_slug =
-                    (string) $post['board_slug'];
+            $board_slug =
+                (string) $post['board_slug'];
 
-                $thread_id =
-                    (int) $post['thread_id'];
+            $thread_id =
+                (int) $post['thread_id'];
 
-                $post_id =
-                    (int) $post['id'];
+            $post_id =
+                (int) $post['id'];
 
-                ?>
+            ?>
 
-                <div class="latest-image">
-
-                    <a
-                        href="/<?= rawurlencode($board_slug) ?>/thread/<?= $thread_id ?>#p<?= $post_id ?>"
-                        title="/<?= h($board_slug) ?>/ No.<?= $post_id ?>"
-                    >
-
-                        <img
-                            src="<?= h($image) ?>"
-                            alt=""
-                            loading="lazy"
-                        >
-
-                    </a>
-
-                    <div class="latest-image-info">
-
-                        <a
-                            href="/<?= rawurlencode($board_slug) ?>/thread/<?= $thread_id ?>#p<?= $post_id ?>"
-                        >
-                            /<?= h($board_slug) ?>/
-                            No.<?= $post_id ?>
-                        </a>
-
-                    </div>
-
-                </div>
-
-            <?php endforeach; ?>
-
-        </div>
-
-    <?php else: ?>
-
-        <div class="frontpage-empty">
-            No images have been posted yet.
-        </div>
-
-    <?php endif; ?>
-
-</div>
-
-
-</div>
-
-<?php
-/*
- * ============================================================
- * RECENT POSTS
- * ============================================================
- */
-
-if (!empty($recent_posts)):
-?>
-
-<div class="frontpage-section">
-
-
-<h2>
-    Recent Posts
-</h2>
-
-<div id="divLatestPosts">
-
-    <?php foreach ($recent_posts as $post): ?>
-
-        <?php
-
-        $board_slug =
-            (string) $post['board_slug'];
-
-        $thread_id =
-            (int) $post['thread_id'];
-
-        $post_id =
-            (int) $post['id'];
-
-        $name =
-            trim(
-                (string) (
-                    $post['name'] ?? ''
-                )
-            );
-
-        if ($name === '') {
-            $name = 'Anonymous';
-        }
-
-        /*
-         * Thread subject comes from threads.subject.
-         */
-        $subject =
-            trim(
-                (string) (
-                    $post['thread_subject'] ?? ''
-                )
-            );
-
-        $body =
-            (string) (
-                $post['body'] ?? ''
-            );
-
-        ?>
-
-        <div class="latest-post">
-
-            <div class="latest-post-header">
-
-                <?php if ($subject !== ''): ?>
-
-                    <span class="latest-post-subject">
-                        <?= h($subject) ?>
-                    </span>
-
-                <?php endif; ?>
-
-                <span class="latest-post-name">
-                    <?= h($name) ?>
-                </span>
-
-                <span class="latest-post-board">
-
-                    <a
-                        href="/<?= rawurlencode($board_slug) ?>/"
-                    >
-                        /<?= h($board_slug) ?>/
-                    </a>
-
-                </span>
+            <div class="latest-image">
 
                 <a
                     href="/<?= rawurlencode($board_slug) ?>/thread/<?= $thread_id ?>#p<?= $post_id ?>"
+                    title="/<?= h($board_slug) ?>/ No.<?= $post_id ?>"
                 >
-                    No.<?= $post_id ?>
+
+                    <img
+                        src="<?= h($image) ?>"
+                        alt=""
+                        loading="lazy"
+                    >
+
                 </a>
 
-                <?php if (post_date($post) !== ''): ?>
+                <div class="latest-image-info">
 
-                    <span class="latest-post-date">
+                    <a
+                        href="/<?= rawurlencode($board_slug) ?>/thread/<?= $thread_id ?>#p<?= $post_id ?>"
+                    >
+                        /<?= h($board_slug) ?>/
+                        No.<?= $post_id ?>
+                    </a>
 
-                        <?= h(
-                            post_date($post)
-                        ) ?>
-
-                    </span>
-
-                <?php endif; ?>
-
-            </div>
-
-            <div class="latest-post-body">
-
-                <?= render_text($body) ?>
+                </div>
 
             </div>
 
-        </div>
+        <?php endforeach; ?>
 
-    <?php endforeach; ?>
+    </div>
 
-</div>
+<?php else: ?>
 
-
-</div>
+    <div class="frontpage-empty">
+        No images have been posted yet.
+    </div>
 
 <?php endif; ?>
+```
+
+</div>
+
+</div>
 
 <style>
 
@@ -505,54 +362,6 @@ if (!empty($recent_posts)):
 
 /*
  * ============================================================
- * RECENT POSTS
- * ============================================================
- */
-
-.latest-post {
-    clear: both;
-    margin-bottom: 12px;
-    padding-bottom: 10px;
-    border-bottom: 1px dotted #bbb;
-}
-
-.latest-post:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-}
-
-.latest-post-header {
-    margin-bottom: 4px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-.latest-post-subject {
-    font-weight: bold;
-    margin-right: 7px;
-}
-
-.latest-post-name {
-    margin-right: 7px;
-}
-
-.latest-post-board {
-    margin-right: 5px;
-}
-
-.latest-post-date {
-    margin-left: 7px;
-    font-size: 11px;
-}
-
-.latest-post-body {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-}
-
-
-/*
- * ============================================================
  * MOBILE
  * ============================================================
  */
@@ -578,11 +387,6 @@ if (!empty($recent_posts)):
 
     .frontpage-section {
         padding: 10px;
-    }
-
-    .latest-post-date {
-        display: block;
-        margin-left: 0;
     }
 
 }
