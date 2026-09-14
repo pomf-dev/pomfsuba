@@ -263,7 +263,68 @@ function get_country_flag_url(
 
 /*
  * ============================================================
+ * FILE INFORMATION
+ * ============================================================
+ *
+ * Shared file metadata helper used by board.php and thread.php.
+ */
+function get_file_info(?string $fileName): ?array
+{
+    if (
+        $fileName === null ||
+        trim($fileName) === ''
+    ) {
+        return null;
+    }
+
+    $fileName = basename($fileName);
+
+    $path =
+        __DIR__ .
+        '/uploads/' .
+        $fileName;
+
+    if (!is_file($path)) {
+        return null;
+    }
+
+    $size =
+        filesize($path);
+
+    if ($size === false) {
+        $size = null;
+    }
+
+    $mime =
+        null;
+
+    if (
+        function_exists('mime_content_type')
+    ) {
+        $detectedMime =
+            @mime_content_type($path);
+
+        if (
+            is_string($detectedMime) &&
+            $detectedMime !== ''
+        ) {
+            $mime = $detectedMime;
+        }
+    }
+
+    return [
+        'name' => $fileName,
+        'path' => $path,
+        'size' => $size,
+        'mime' => $mime,
+    ];
+}
+
+
+/*
+ * ============================================================
  * POST MARKUP RENDERER
+
  * ============================================================
  *
  * 8chan / LynxChan-style markup:
@@ -673,6 +734,11 @@ function page_footer(): void
 
     </div>
 
+<footer class="site-footer">
+    <a href="https://github.com/pomf-dev/pomfsuba" target="_blank" rel="noopener noreferrer">
+        pomfsuba on GitHub
+    </a>
+</footer>
     </body>
 
     </html>
