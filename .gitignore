@@ -1,0 +1,34 @@
+# Secrets
+.env
+.env.*
+config.local.php
+
+# Uploaded user content
+/uploads/
+
+# Backups / old copies
+*.bak
+*.before-fix
+*.before-fix-2
+
+# Project archive
+pomfIB.zip
+
+# Database dumps
+*.sql
+*.sql.gz
+
+# Logs
+*.log
+logs/
+
+# Temporary/cache files
+tmp/
+cache/
+
+# IDE / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+/vendor/

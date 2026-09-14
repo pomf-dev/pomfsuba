@@ -1,0 +1,68 @@
+Options -Indexes
+
+<FilesMatch "^(config\.php|db\.sql)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+
+    RewriteEngine On
+
+    # ------------------------------------------------------------
+    # Protect uploaded files from being executed as PHP
+    # ------------------------------------------------------------
+
+    RewriteRule ^uploads/.*\.(?:php|phtml|php[0-9]*)$ - [F,L,NC]
+
+
+    # ------------------------------------------------------------
+    # Don't rewrite real files/directories
+    # ------------------------------------------------------------
+
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+
+    # ------------------------------------------------------------
+    # Old board.php URLs -> pretty board URLs
+    #
+    # /board.php?b=b
+    #        -> /b/
+    # ------------------------------------------------------------
+
+    RewriteCond %{THE_REQUEST} \s/+board\.php\?b=([^&\s]+) [NC]
+    RewriteRule ^board\.php$ /%1/? [R=301,L]
+
+
+    # ------------------------------------------------------------
+    # Old thread.php URLs -> pretty thread URLs
+    #
+    # /thread.php?b=b&id=123
+    #        -> /b/thread/123
+    # ------------------------------------------------------------
+
+    RewriteCond %{THE_REQUEST} \s/+thread\.php\?b=([^&\s]+)&id=([0-9]+) [NC]
+    RewriteRule ^thread\.php$ /%1/thread/%2? [R=301,L]
+
+
+    # ------------------------------------------------------------
+    # Pretty thread URL
+    #
+    # /b/thread/123
+    #        -> /thread.php?b=b&id=123
+    # ------------------------------------------------------------
+
+    RewriteRule ^([^/]+)/thread/([0-9]+)/?$ thread.php?b=$1&id=$2 [L,QSA]
+
+
+    # ------------------------------------------------------------
+    # Pretty board URL
+    #
+    # /b/
+    #        -> /board.php?b=b
+    # ------------------------------------------------------------
+
+    RewriteRule ^([^/]+)/?$ board.php?b=$1 [L,QSA]
+
+</IfModule>

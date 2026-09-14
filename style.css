@@ -1,0 +1,1270 @@
+*,
+:after,
+:before {
+box-sizing: border-box
+}
+
+body {
+background-color: #f7f7f7;
+background-image: url(img/bg.png);
+
+
+@supports (background-image: url("img/bg.avif")) {
+    background-image: url(img/bg.avif)
+}
+
+background-position: 0 0;
+background-repeat: repeat;
+color: #333;
+font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+font-size: 14px;
+height: 100vh;
+line-height: 20px;
+margin: 0;
+opacity: 1!important;
+padding-top: 15px;
+text-rendering: optimizelegibility;
+text-shadow: 0 1px hsla(0,0%,100%,.5);
+position: relative
+
+
+}
+
+body:after {
+content: "";
+position: fixed;
+right: 0;
+bottom: 0;
+width: 180px;
+height: 270px;
+background-image: url("/img/anime-girl.avif");
+background-repeat: no-repeat;
+background-position: right bottom;
+background-size: contain;
+pointer-events: none;
+z-index: 0
+}
+
+.grill-wrapper,
+body {
+background-attachment: fixed
+}
+
+.grill-wrapper {
+background-image: var(--png-bg);
+
+```
+@supports (background-image: var(--avif-bg )) {
+    background-image: var(--avif-bg )
+}
+
+background-position: 85% 100%;
+background-repeat: no-repeat;
+min-height: 100vh;
+position: relative;
+z-index: 1
+
+
+}
+
+.container {
+width: 100%;
+max-width: 750px;
+margin: 0 auto;
+padding: 0;
+position: relative;
+z-index: 1
+}
+
+img,
+input[type=image] {
+vertical-align: middle
+}
+
+a {
+color: #0078b4;
+text-decoration: none
+}
+
+a:active,
+a:focus,
+a:hover {
+color: #005580
+}
+
+a:focus {
+outline: thin dotted #333
+}
+
+.jumbotron {
+margin: 60px 0;
+text-align: center
+}
+
+.jumbotron h1 {
+color: inherit;
+cursor: default;
+font-family: inherit;
+font-size: 72px;
+font-weight: 700;
+line-height: 1;
+margin: 10px 0;
+text-rendering: optimizelegibility
+}
+
+.jumbotron .lead {
+font-size: 21px;
+font-weight: 200;
+line-height: 30px;
+margin-bottom: 20px
+}
+
+.jumbotron .btn {
+background: rgba(202,230,190,.75);
+border: 1px solid #b7d1a0;
+border-radius: 4px;
+color: #468847;
+cursor: pointer;
+display: inline-block;
+font-size: 24px;
+padding: 28px 48px;
+text-shadow: 0 1px hsla(0,0%,100%,.5)
+}
+
+.jumbotron .btn.drop,
+.jumbotron .btn:active,
+.jumbotron .btn:focus,
+.jumbotron .btn:hover {
+background-color: #bce4aa;
+text-decoration: none
+}
+
+.alert {
+border: 1px solid #fbeed5;
+border-radius: 4px;
+padding: 14px;
+text-shadow: 0 1px hsla(0,0%,100%,.5)
+}
+
+.alert-error {
+background-color: #f2dede;
+border-color: #eed3d7;
+color: #aa4342
+}
+
+.alert-info {
+background-color: #d9edf7;
+border-color: #bce8f1;
+color: #167196
+}
+
+.frontpage-section {
+margin-top: 15px;
+padding: 14px;
+border: 1px solid #bce8f1;
+border-radius: 4px;
+background-color: #d9edf7;
+width: 100%;
+}
+
+span.donate-btns {
+display: block;
+margin: 11px 0 3px;
+text-align: center
+}
+
+a.donate-btn {
+background: #f2f2f2;
+border: 1px solid #d9d9d9;
+border-radius: 3px;
+color: #404040;
+display: inline-block;
+height: 26px;
+line-height: 16px;
+margin: 2px 5px;
+padding: 3px 8px 3px 24px
+}
+
+a.donate-btn:hover {
+background-color: #ccc;
+border: 1px solid #b3b3b3;
+color: #000
+}
+
+.icon {
+display: block;
+float: left;
+height: 16px;
+margin-left: -20px;
+margin-top: 1px;
+width: 16px
+}
+
+.icon-paypal {
+background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' xml:space='preserve' width='16' height='16'%3E%3Cpath fill='%23385c8e' d='M14.823 2.791c.65 1.192.435 2.597.179 3.428-1.385 4.524-7.635 4.278-8.539 4.278s-1.113.842-1.113.842l-.675 2.946c-.184 1.034-1.122.982-1.122.982H1.52q-.077 0-.143-.01c-.01.189.017.743.694.743h2.034s.938.053 1.122-.981l.674-2.946s.211-.842 1.114-.842 7.154.246 8.539-4.278c.309-1.011.56-2.869-.731-4.162'/%3E%3Cpath fill='%23385c8e' d='m4.048 13.642.675-2.946s.21-.841 1.114-.841c.902 0 7.153.245 8.538-4.278C14.882 3.923 15.233 0 8.922 0H4.364s-.948-.044-1.181.963L.204 13.819s-.128.806.687.806h2.035s.938.053 1.122-.982m1.718-7.479.605-2.612s.193-.71.816-.816c.622-.106 1.682.019 1.955.07 1.77.332 1.394 2.007 1.394 2.007-.35 2.586-4.375 2.227-4.375 2.227-.631-.228-.395-.877-.395-.877'/%3E%3C/svg%3E")
+}
+
+.icon-bitcoin {
+background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='16' viewBox='0 -0.01 0.68 0.68' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M.665.323a.323.323 0 1 1-.648 0 .323.323 0 0 1 .649 0M.42.203c.045.015.078.038.071.081Q.482.329.446.336q.048.027.033.086C.46.477.414.481.354.47L.339.529.303.52.318.462.29.455.275.513.24.504.255.445.183.427.201.386l.026.006C.237.394.242.388.243.384l.04-.159C.283.217.281.208.266.204L.24.198.249.16l.072.018L.336.12l.035.009-.014.057.029.007L.4.136l.036.009zM.335.3C.359.306.412.32.421.284S.379.235.354.23L.347.228.329.299l.006.002M.308.415C.337.423.4.439.41.399.42.358.359.344.329.337L.32.335.3.413l.007.002' fill='%23F7931A'/%3E%3C/svg%3E")
+}
+
+.icon-ethereum {
+background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='m7.963 11.98-4.91-2.9L7.962 16l4.913-6.92-4.915 2.9zM8.037 0l-4.91 8.149 4.91 2.903 4.91-2.9z' fill='%23343434'/%3E%3C/svg%3E")
+}
+
+.icon-kofi {
+background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg width='16' height='16' viewBox='-0.181 0 1.859 1.859' xmlns='http://www.w3.org/2000/svg'%3E%3Cg data-name='Layer 2'%3E%3Cg data-name='Layer 1'%3E%3Cg data-name='Coffee Icon'%3E%3Cpath data-name='Coffee Cup' d='M.124.36A.125.125 0 0 1 .248.222H1.25a.125.125 0 0 1 .124.138l-.151 1.388a.125.125 0 0 1-.124.111h-.7a.125.125 0 0 1-.124-.111Z' fill='%237b7b7b'/%3E%3Cpath d='M1.387.14h-.032V.11a.11.11 0 0 0-.11-.11h-.99a.11.11 0 0 0-.11.11v.03H.11A.11.11 0 0 0 0 .249v.06a.11.11 0 0 0 .11.11h1.277a.11.11 0 0 0 .11-.11v-.06a.11.11 0 0 0-.11-.11' fill='%2398c7eb'/%3E%3Cg data-name='Cup Sleeve'%3E%3Cpath data-name='Cup Sleeve' d='M.072.861A.11.11 0 0 1 .181.738H1.32a.11.11 0 0 1 .109.123l-.062.5a.11.11 0 0 1-.109.096H.242a.11.11 0 0 1-.109-.096Z' fill='%23edaea3'/%3E%3Cpath d='m.751 1.271-.026-.026C.629 1.16.566 1.103.566 1.033A.1.1 0 0 1 .668.932a.11.11 0 0 1 .083.039.11.11 0 0 1 .083-.039.1.1 0 0 1 .102.101c0 .07-.063.127-.159.212Z' fill='%23ff7878'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E")
+}
+
+nav {
+padding-bottom: 20px;
+padding-top: 20px;
+position: relative;
+z-index: 1
+}
+
+nav a,
+nav>ul {
+color: #167196;
+list-style: none;
+margin: 0;
+padding: 0;
+text-align: center
+}
+
+nav>ul>li {
+cursor: default;
+display: inline-block;
+margin: 0;
+padding: 0
+}
+
+nav>ul>li:after {
+content: "|";
+margin: 0 8px;
+opacity: .3
+}
+
+nav>ul>li:last-child:after {
+content: "";
+margin: 0
+}
+
+.boardbanner,
+.board-title,
+.board-description,
+.subtitle {
+text-align: center
+}
+
+.site-banner {
+text-align: center;
+margin: 5px 0 15px;
+}
+
+.site-banner img {
+display: block;
+max-width: 100%;
+height: auto;
+margin: 0 auto;
+}
+
+.postform,
+.postForm {
+margin-left: auto;
+margin-right: auto;
+text-align: left;
+width: fit-content;
+max-width: 100%;
+}
+
+.postform table,
+.postForm table {
+margin-left: auto;
+margin-right: auto;
+}
+
+.markup-guide {
+margin-left: auto;
+margin-right: auto;
+text-align: center;
+max-width: 100%;
+}
+
+.thread-navigation,
+.thread-actions {
+text-align: center;
+}
+
+.board-threads,
+.threads,
+.thread-list {
+width: 100%;
+max-width: none;
+margin-left: 0;
+margin-right: 0;
+padding: 0;
+text-align: left;
+}
+
+.thread {
+width: 100%;
+max-width: none;
+margin: 0 0 22px 0;
+padding: 0;
+text-align: left;
+clear: both;
+}
+
+.thread > .post:first-child,
+.thread > .post.op {
+background: transparent;
+padding: 0;
+margin-bottom: 8px;
+width: auto;
+max-width: 100%;
+}
+
+.thread > .post:not(:first-child),
+.thread > .post.reply {
+background-color: #d9edf7;
+display: table;
+width: auto;
+max-width: calc(100vw - 30px);
+padding: 4px 6px;
+margin: 0 0 3px 0;
+text-align: left;
+line-height: 16px;
+box-sizing: border-box;
+}
+
+.thread > .post.reply .post-header {
+margin: 0;
+padding: 0;
+line-height: 16px;
+}
+
+.thread > .post.reply .post-body {
+margin: 0;
+padding: 0;
+line-height: 16px;
+}
+
+.thread > .post.reply .post-image {
+margin: 2px 0 4px 0;
+}
+
+.thread > .post.reply p {
+margin-top: 0;
+margin-bottom: 0;
+}
+
+.thread > .post.reply br {
+line-height: 16px;
+}
+
+.post,
+.body {
+overflow-wrap: break-word;
+word-wrap: break-word;
+}
+
+.body {
+overflow: visible;
+}
+
+.post-header {
+white-space: normal;
+}
+
+.post-image {
+display: block;
+max-width: 250px;
+max-height: 400px;
+width: auto;
+height: auto;
+cursor: pointer;
+transition:
+max-width .15s ease,
+max-height .15s ease;
+}
+
+.post-image.expanded-image {
+max-width: 90vw !important;
+max-height: 90vh !important;
+width: auto !important;
+height: auto !important;
+cursor: zoom-out;
+position: relative;
+z-index: 10;
+}
+
+.file {
+float: left;
+margin-right: 15px;
+margin-bottom: 8px
+}
+
+.fileinfo {
+font-size: 10px;
+margin-bottom: 3px
+}
+
+.quick-reply {
+clear: both;
+margin-top: 8px;
+margin-bottom: 10px;
+padding: 10px;
+border-radius: 4px;
+width: fit-content;
+max-width: 100%;
+text-align: left;
+}
+
+.quick-reply textarea {
+width: 600px;
+max-width: 100%;
+min-height: 100px;
+box-sizing: border-box;
+}
+
+.quick-reply input[type="text"],
+.quick-reply input[type="password"] {
+max-width: 100%;
+}
+
+.highlighted-post {
+outline: 2px solid #bce8f1;
+outline-offset: 2px;
+}
+
+#upload-filelist {
+list-style-type: none;
+margin: 20px 30px;
+padding: 0;
+text-align: left
+}
+
+.error#upload-filelist {
+color: #891a18
+}
+
+button.upload-clipboard-btn {
+height: 27px;
+margin-left: 8px
+}
+
+button.upload-clipboard-btn img {
+content: url('data:image/svg+xml;charset=utf-8,<svg width="16" height="16" viewBox="0 0 0.48 0.48" xmlns="http://www.w3.org/2000/svg"><path d="M.42.179.419.174V.172L.415.166l-.12-.12L.289.042H.287L.28.04H.2A.06.06 0 0 0 .14.1v.02H.12a.06.06 0 0 0-.06.06v.2a.06.06 0 0 0 .06.06h.16A.06.06 0 0 0 .34.38V.36h.02A.06.06 0 0 0 .42.3zM.3.108.352.16H.32A.02.02 0 0 1 .3.14ZM.3.38A.02.02 0 0 1 .28.4H.12A.02.02 0 0 1 .1.38v-.2A.02.02 0 0 1 .12.16h.02V.3A.06.06 0 0 0 .2.36h.1ZM.38.3a.02.02 0 0 1-.02.02H.2A.02.02 0 0 1 .18.3V.1A.02.02 0 0 1 .2.08h.06v.06A.06.06 0 0 0 .32.2h.06Z"/></svg>')
+}
+
+button.upload-clipboard-btn img:active {
+content: url('data:image/svg+xml;charset=utf-8,<svg width="16" height="16" viewBox="0 0 0.64 0.64" xmlns="http://www.w3.org/2000/svg" fill="none"><path stroke="%23535358" stroke-linecap="round" stroke-linejoin="round" stroke-width=".04" d="m.13.34.12.12L.51.2"/></svg>')
+}
+
+.error#upload-filelist .progress-percent {
+color: #b94a48
+}
+
+.error#upload-filelist .file-progress {
+display: none
+}
+
+#upload-filelist>li {
+margin-top: 5px;
+overflow: hidden
+}
+
+#upload-filelist>li.total {
+border-top: 1px solid rgba(0,0,0,.05);
+font-weight: 700;
+padding-top: 5px
+}
+
+.file-name {
+float: left;
+max-width: 70%;
+overflow: hidden;
+text-overflow: ellipsis;
+white-space: nowrap
+}
+
+.file-progress,
+.file-url {
+display: inline-block;
+float: right;
+font-size: 1em;
+margin-left: 8px;
+vertical-align: middle
+}
+
+.file-url a {
+color: #5c5c5c
+}
+
+.file-url a:hover {
+color: #1c1c1c
+}
+
+.progress-percent {
+float: right
+}
+
+progress[value] {
+-webkit-appearance: none;
+-moz-appearance: none;
+appearance: none;
+border: none
+}
+
+progress[value]::-webkit-progress-bar {
+background-color: #eee;
+border-radius: 2px;
+box-shadow: inset 0 2px 5px rgba(0,0,0,.25)
+}
+
+.completed .file-progress,
+.completed .progress-percent {
+display: none
+}
+
+.completed .file-url {
+display: block
+}
+
+.progress-outer {
+background-color: hsla(0,0%,100%,.8);
+border: 1px solid #fff;
+border-radius: 4px;
+box-shadow: 0 0 0 1px #000;
+color: transparent;
+display: inline-block;
+float: right;
+font-size: 0;
+height: 8px;
+margin: 6px 6px 0;
+overflow: hidden;
+vertical-align: middle;
+width: 50px
+}
+
+.progress-inner {
+background-color: #000;
+height: 6px;
+margin: 0;
+width: 0
+}
+
+.thread,
+.thread-page,
+.postform,
+.postForm,
+.alert,
+header,
+h1,
+h2,
+h3,
+hr,
+footer,
+.boardbanner,
+.subtitle,
+.markup-guide,
+.thread-navigation,
+.frontpage-section {
+position: relative;
+z-index: 1
+}
+
+#upload-btn,
+.js #upload-input,
+.js input[type=submit] {
+display: none
+}
+
+.js #upload-btn {
+display: inline-block!important
+}
+
+kbd {
+background-color: #444;
+border-radius: .25rem;
+color: #fff;
+font-size: 13px;
+padding: .1875rem .375rem;
+text-shadow: none
+}
+
+kbd:before {
+content: "$ "
+}
+
+#copy-all-btn {
+float: right;
+margin-right: 2.24em
+}
+
+html,
+body {
+overflow-x: hidden
+}
+
+.site-page .container {
+width: 100%;
+max-width: 750px;
+margin: 0 auto;
+}
+
+.board-page .container {
+width: 100%;
+max-width: none;
+margin: 0;
+padding: 0 10px;
+}
+
+.board-page nav {
+text-align: center;
+}
+
+.board-page .board-title,
+.board-page .board-description,
+.board-page .board-header,
+.board-page .subtitle {
+text-align: center;
+}
+
+.board-page .postform,
+.board-page .postForm,
+.board-page form[action*="post.php"] {
+width: fit-content;
+max-width: 100%;
+margin-left: auto;
+margin-right: auto;
+}
+
+.board-page .markup-guide {
+max-width: 750px;
+margin-left: auto;
+margin-right: auto;
+text-align: center;
+}
+
+.board-page .threads,
+.board-page .thread-list,
+.board-page .board-threads {
+width: 100%;
+max-width: none;
+margin: 20px 0 0 0;
+padding: 0;
+text-align: left;
+}
+
+.board-page .thread {
+width: 100%;
+max-width: none;
+margin: 0 0 25px 0;
+padding: 0;
+text-align: left;
+}
+
+.board-page .thread > .post:first-child,
+.board-page .thread > .post.op {
+display: block;
+width: auto;
+max-width: 100%;
+background: transparent;
+padding: 0;
+margin: 0 0 8px 0;
+text-align: left;
+}
+
+.board-page .thread > .post:not(:first-child),
+.board-page .thread > .post.reply {
+display: table;
+width: auto;
+max-width: calc(100vw - 40px);
+background-color: #d9edf7;
+padding: 4px 6px;
+margin: 0 0 3px 0;
+text-align: left;
+line-height: 16px;
+box-sizing: border-box;
+}
+
+.board-page .thread > .post.reply .post-header {
+margin: 0;
+padding: 0;
+line-height: 16px;
+}
+
+.board-page .thread > .post.reply .post-body {
+margin: 0;
+padding: 0;
+line-height: 16px;
+}
+
+.board-page .thread > .post.reply .post-image {
+margin: 2px 0 4px 0;
+}
+
+.board-page .thread > .post.reply p {
+margin-top: 0;
+margin-bottom: 0;
+}
+
+.board-page .thread > .post.reply br {
+line-height: 16px;
+}
+
+.board-page .post {
+box-sizing: border-box;
+}
+
+.board-page .body {
+max-width: 100%;
+overflow-wrap: break-word;
+word-wrap: break-word;
+}
+
+.board-page .post-image {
+display: block;
+max-width: 250px;
+max-height: 400px;
+width: auto;
+height: auto;
+cursor: zoom-in;
+}
+
+.board-page .post-image.expanded-image {
+max-width: 90vw !important;
+max-height: 90vh !important;
+width: auto !important;
+height: auto !important;
+cursor: zoom-out;
+}
+
+.board-page .file {
+float: left;
+margin-right: 15px;
+margin-bottom: 8px;
+}
+
+.board-page .fileinfo {
+font-size: 10px;
+margin-bottom: 3px;
+}
+
+.board-page .post a {
+word-break: break-word;
+}
+
+.board-page .highlighted-post {
+outline: 2px solid #bce8f1;
+outline-offset: 2px;
+}
+
+.board-page .quick-reply {
+clear: both;
+width: fit-content;
+max-width: 100%;
+margin: 10px 0;
+padding: 10px;
+}
+
+.board-page .quick-reply textarea {
+width: 600px;
+max-width: 100%;
+box-sizing: border-box;
+}
+
+.post.reply {
+background: #e6e6ff;
+border: 1px solid #aaa;
+display: table;
+width: auto;
+max-width: 95%;
+padding: 4px 6px;
+margin: 3px 0;
+box-sizing: border-box;
+line-height: 16px;
+}
+
+.post.reply .post-header {
+margin: 0;
+padding: 0;
+line-height: 16px;
+}
+
+.post.reply .post-body {
+margin: 0;
+padding: 0;
+line-height: 16px;
+}
+
+.post.reply .post-image {
+margin: 2px 0 4px 0;
+}
+
+@media only screen and (max-width: 700px) {
+
+
+.board-page .container {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.board-page .thread > .post:not(:first-child),
+.board-page .thread > .post.reply {
+    max-width: calc(100vw - 20px);
+}
+
+.board-page .post-image {
+    max-width: 200px;
+    max-height: 350px;
+}
+
+.board-page .quick-reply textarea {
+    width: 100%;
+}
+
+.post.reply {
+    max-width: 98%;
+}
+
+
+}
+
+@media only screen and (max-width: 600px) {
+
+
+body {
+    padding: 10px 0 0
+}
+
+.container {
+    width: 100%;
+    max-width: 750px;
+    padding-left: 5px;
+    padding-right: 5px
+}
+
+.jumbotron {
+    margin: 20px 0 30px
+}
+
+.jumbotron .lead {
+    font-size: 18px
+}
+
+#upload-filelist,
+.alert,
+.jumbotron .btn {
+    border-radius: 4px;
+    border-width: 1px 0;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+    width: 100%
+}
+
+#upload-filelist {
+    background-color: hsla(0,0%,100%,.75);
+    overflow: hidden;
+    text-align: center
+}
+
+#upload-filelist>li.file {
+    margin-bottom: 14px;
+    margin-top: 14px
+}
+
+.file-progress {
+    width: 30%
+}
+
+.file-name,
+.file-url {
+    max-width: 100%;
+    width: 100%
+}
+
+.file-url a {
+    margin-left: 15px;
+    text-decoration: underline
+}
+
+.alert {
+    font-size: 13px
+}
+
+.alert-error {
+    background-color: hsla(0,64%,92%,.75)
+}
+
+nav {
+    background-color: hsla(0,0%,100%,.75);
+    border: #fff;
+    padding-bottom: 15px;
+    padding-top: 10px
+}
+
+.postform,
+.postForm {
+    width: 100%;
+    overflow-x: auto
+}
+
+.markup-guide {
+    width: 100%;
+    overflow-x: auto
+}
+
+.thread {
+    width: 100%
+}
+
+.thread > .post:not(:first-child),
+.thread > .post.reply {
+    max-width: calc(100vw - 20px);
+}
+
+.post-image {
+    max-width: 200px;
+    max-height: 320px
+}
+
+body:after {
+    width: 180px;
+    height: 270px;
+    opacity: .85
+}
+```
+
+}
+
+@media only screen and (max-device-width:320px),
+only screen and (max-width:400px) {
+
+
+.container {
+    padding-left: 5px;
+    padding-right: 5px
+}
+
+.post-image {
+    max-width: 180px;
+    max-height: 300px
+}
+
+body:after {
+    width: 120px;
+    height: 180px
+}
+
+
+}
+
+.board-page .board-header {
+width: 100%;
+max-width: 750px;
+margin: 0 auto 15px auto;
+text-align: center;
+}
+
+.board-page .board-header h1 {
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+}
+
+.board-page .board-description {
+text-align: center;
+margin-left: auto;
+margin-right: auto;
+}
+
+/*
+
+* ============================================================
+* pomfIB 8CHAN / LYNXCHAN MARKUP
+* ============================================================
+  */
+
+.markup-greentext {
+color: #789922;
+}
+
+.markup-red {
+color: #d14;
+}
+
+.markup-doom {
+color: #b30000;
+font-weight: bold;
+}
+
+.markup-moe {
+color: #ff69b4;
+font-weight: bold;
+text-shadow:
+0 0 2px rgba(255, 105, 180, .35);
+}
+
+.markup-echo {
+color: #777;
+}
+
+.markup-spoiler {
+color: transparent;
+background: #000;
+cursor: pointer;
+padding: 0 2px;
+border-radius: 1px;
+}
+
+.markup-spoiler:hover {
+color: #fff;
+}
+
+.markup-spoiler-demo {
+background: #000;
+color: #000;
+padding: 0 3px;
+}
+
+.markup-code {
+display: block;
+white-space: pre-wrap;
+font-family: monospace;
+font-size: 12px;
+line-height: 1.3;
+background: #eee;
+border: 1px solid #aaa;
+padding: 8px;
+margin: 4px 0;
+overflow-x: auto;
+text-align: left;
+text-shadow: none;
+}
+
+.markup-aa {
+display: block;
+white-space: pre;
+font-family: monospace;
+font-size: 12px;
+line-height: 1.1;
+margin: 4px 0;
+overflow-x: auto;
+text-align: left;
+text-shadow: none;
+}
+
+/*
+
+* ============================================================
+* IMAGEBOARD POST IMAGE LAYOUT
+* ============================================================
+*
+* Images sit on the left and post text flows beside them,
+* matching the traditional Futaba / 4chan / Wakaba layout.
+  */
+
+/* Every post creates its own float-clearing context. */
+.post {
+display: flow-root;
+}
+
+/*
+
+* The image container itself floats left.
+* This is the important part: text will flow alongside it.
+  */
+  .post-image {
+  display: block;
+  float: left;
+  width: auto;
+  max-width: 250px;
+  max-height: 400px;
+  margin: 0 15px 8px 0;
+  padding: 0;
+  cursor: zoom-in;
+  }
+
+/*
+
+* The actual image must remain inside the floating container.
+  */
+  .post-image img {
+  display: block;
+  width: auto;
+  max-width: 250px;
+  max-height: 250px;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  cursor: zoom-in;
+  }
+
+/*
+
+* OP posts have no reply-box background.
+* The image remains on the left while the message
+* flows naturally to its right.
+  */
+  .thread-page .post.op,
+  .board-page .post.op {
+  display: flow-root;
+  width: auto;
+  max-width: 100%;
+  margin: 8px 0;
+  padding: 8px;
+  background: transparent;
+  border: 0;
+  text-align: left;
+  clear: both;
+  }
+
+.thread-page .post.op .post-header,
+.board-page .post.op .post-header {
+display: block;
+width: 100%;
+margin: 0 0 6px;
+padding: 0;
+text-align: left;
+}
+
+.thread-page .post.op .post-image,
+.board-page .post.op .post-image {
+float: left;
+display: block;
+width: auto;
+max-width: 250px;
+margin: 0 15px 8px 0;
+padding: 0;
+}
+
+.thread-page .post.op .post-body,
+.board-page .post.op .post-body {
+display: block;
+width: auto;
+max-width: none;
+margin: 0;
+padding: 0;
+text-align: left;
+word-wrap: break-word;
+overflow-wrap: anywhere;
+}
+
+/*
+
+* Reply posts remain compact boxes.
+  */
+  .thread-page .post.reply,
+  .board-page .post.reply {
+  display: table;
+  width: auto;
+  max-width: 95%;
+  margin: 3px 0;
+  padding: 4px 6px;
+  background: #e6e6ff;
+  border: 1px solid #aaa;
+  box-sizing: border-box;
+  text-align: left;
+  line-height: 16px;
+  }
+
+.thread-page .post.reply .post-image,
+.board-page .post.reply .post-image {
+float: left;
+display: block;
+max-width: 250px;
+margin: 2px 12px 6px 0;
+}
+
+.thread-page .post.reply .post-body,
+.board-page .post.reply .post-body {
+margin: 0;
+padding: 0;
+line-height: 16px;
+}
+
+/*
+
+* Expanded images.
+  */
+  .post-image img.expanded,
+  .post-image.expanded-image img {
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  }
+
+/*
+
+* Make sure the image float cannot interfere with
+* the following post.
+  */
+  .thread-page .post,
+  .board-page .post {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  }
+
+.thread-page .post::after,
+.board-page .post::after {
+content: "";
+display: table;
+clear: both;
+}
+
+/*
+
+* Mobile layout.
+  */
+  @media only screen and (max-width: 700px) {
+
+  .thread-page .post.op,
+  .board-page .post.op {
+  max-width: 100%;
+  }
+
+  .thread-page .post.op .post-image,
+  .board-page .post.op .post-image {
+  max-width: 180px;
+  margin-right: 10px;
+  margin-bottom: 6px;
+  }
+
+  .thread-page .post.op .post-image img,
+  .board-page .post.op .post-image img {
+  max-width: 180px;
+  max-height: 180px;
+  }
+
+  .thread-page .post.reply,
+  .board-page .post.reply {
+  max-width: 98%;
+  }
+  }
+
+@media only screen and (max-width: 400px) {
+
+.thread-page .post.op .post-image,
+.board-page .post.op .post-image {
+    max-width: 150px;
+    margin-right: 8px;
+}
+
+.thread-page .post.op .post-image img,
+.board-page .post.op .post-image img {
+    max-width: 150px;
+    max-height: 150px;
+}
+
+}
+
+.staff-capcode {
+    color: #c6a0f6;
+    font-weight: bold;
+}
