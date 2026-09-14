@@ -30,21 +30,27 @@ function format_file_size(?int $bytes): string
     }
 
     if ($bytes < 1024) {
+
         return $bytes . ' B';
+
     }
 
     if ($bytes < 1024 * 1024) {
+
         return number_format(
             $bytes / 1024,
             1
         ) . ' KB';
+
     }
 
     if ($bytes < 1024 * 1024 * 1024) {
+
         return number_format(
             $bytes / (1024 * 1024),
             1
         ) . ' MB';
+
     }
 
     return number_format(
@@ -55,7 +61,21 @@ function format_file_size(?int $bytes): string
 
 
 /*
+ * ============================================================
  * POST NAME / CAPCODE / COUNTRY FLAG
+ * ============================================================
+ *
+ * Country flags are ONLY displayed on /int/.
+ *
+ * The country code is stored in posts.country_code.
+ *
+ * Example:
+ *
+ *     US -> /static/flags/us.svg
+ *     UA -> /static/flags/ua.png
+ *
+ * The actual flag filename is resolved by the shared
+ * get_country_flag_url() helper from config.php.
  */
 
 function render_post_name(
@@ -142,6 +162,8 @@ if (!$board) {
 
 /*
  * COUNTRY FLAGS
+ *
+ * Flags are intentionally restricted to /int/.
  */
 
 $showCountryFlags =
@@ -184,10 +206,12 @@ page_header(
 
 <a href="/">
 
+
 <img
     src="/banners/banner.webp"
     alt="pomfIB"
 >
+
 
 </a>
 
@@ -196,6 +220,7 @@ page_header(
 <div class="board-header">
 
 <?php if (!empty($board['banner'])): ?>
+
 
 <div class="boardbanner">
 
@@ -207,9 +232,11 @@ page_header(
 
 </div>
 
+
 <?php endif; ?>
 
 <header class="board-title">
+
 
 <h1>
     /<?= h($board['slug']) ?>/
@@ -225,6 +252,7 @@ page_header(
 
 <?php endif; ?>
 
+
 </header>
 
 </div>
@@ -239,6 +267,7 @@ page_header(
     enctype="multipart/form-data"
     class="postform"
 >
+
 
 <input
     type="hidden"
@@ -393,6 +422,7 @@ page_header(
 
 </table>
 
+
 </form>
 
 </div>
@@ -406,6 +436,7 @@ page_header(
     method="get"
     class="board-search"
 >
+
 
 <input
     type="text"
@@ -424,14 +455,20 @@ page_header(
     value="Search"
 >
 
+
 </form>
 
 <button
-    type="button"
-    id="board-refresh"
-    class="board-refresh"
+type="button"
+id="board-refresh"
+class="board-refresh"
+
 >
-    Refresh
+
+
+Refresh
+
+
 </button>
 
 </div>
@@ -484,6 +521,7 @@ $op =
     id="thread_<?= (int) $thread['id'] ?>"
     data-board="<?= h($board['slug']) ?>"
 >
+
 
 <?php if ($op): ?>
 
@@ -572,83 +610,78 @@ $op =
                 href="#"
                 class="report-link"
                 data-post-id="<?= (int) $op['id'] ?>"
-                title="Report post"
             >
-                <img
-                    src="/img/report.png"
-                    alt="Report"
-                    class="report-button"
-                >
+                [Report]
             </a>
 
         </p>
 
-<?php if (!empty($op['file_name'])): ?>
+        <?php if (!empty($op['file_name'])): ?>
 
-        <?php
-        $fileInfo =
-            get_file_info(
-                (string) $op['file_name']
-            );
-        ?>
+            <?php
+            $fileInfo =
+                get_file_info(
+                    (string) $op['file_name']
+                );
+            ?>
 
-        <div class="file">
+            <div class="file">
 
-            <div class="fileinfo">
+                <div class="fileinfo">
+
+                    <a
+                        href="/<?= h(UPLOAD_URL . '/' . $op['file_name']) ?>"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        <?= h($fileInfo['name']) ?>
+                    </a>
+
+                    <?php if (
+                        $fileInfo['width'] !== null &&
+                        $fileInfo['height'] !== null
+                    ): ?>
+
+                        <span>
+                            (
+                            <?= (int) $fileInfo['width'] ?>
+                            x
+                            <?= (int) $fileInfo['height'] ?>
+                            ,
+                            <?= h(format_file_size($fileInfo['size'])) ?>
+                            )
+                        </span>
+
+                    <?php else: ?>
+
+                        <span>
+                            (
+                            <?= h(format_file_size($fileInfo['size'])) ?>
+                            )
+                        </span>
+
+                    <?php endif; ?>
+
+                </div>
 
                 <a
                     href="/<?= h(UPLOAD_URL . '/' . $op['file_name']) ?>"
                     target="_blank"
                     rel="noopener"
                 >
-                    <?= h($fileInfo['name']) ?>
+
+                    <img
+                        class="post-image"
+                        src="/<?= h(UPLOAD_URL . '/' . $op['file_name']) ?>"
+                        loading="lazy"
+                        alt=""
+                    >
+
                 </a>
-
-                <?php if (
-                    $fileInfo['width'] !== null &&
-                    $fileInfo['height'] !== null
-                ): ?>
-
-                    <span>
-                        (
-                        <?= (int) $fileInfo['width'] ?>
-                        x
-                        <?= (int) $fileInfo['height'] ?>
-                        ,
-                        <?= h(format_file_size($fileInfo['size'])) ?>
-                        )
-                    </span>
-
-                <?php else: ?>
-
-                    <span>
-                        (
-                        <?= h(format_file_size($fileInfo['size'])) ?>
-                        )
-                    </span>
-
-                <?php endif; ?>
 
             </div>
 
-            <a
-                href="/<?= h(UPLOAD_URL . '/' . $op['file_name']) ?>"
-                target="_blank"
-                rel="noopener"
-            >
-
-                <img
-                    class="post-image"
-                    src="/<?= h(UPLOAD_URL . '/' . $op['file_name']) ?>"
-                    loading="lazy"
-                    alt=""
-                >
-
-            </a>
-
-        </div>
-
-<?php endif; ?>
+        <?php endif; ?>
 
         <div class="body">
 
@@ -664,20 +697,14 @@ $op =
 
 <?php endif; ?>
 
-
 <?php foreach (array_slice($posts, 1) as $post): ?>
 
     <div
         class="post reply"
-        id="reply_<?= (int) $post['id'] ?>"
+        id="p<?= (int) $post['id'] ?>"
     >
 
         <p class="intro">
-
-            <a
-                id="<?= (int) $post['id'] ?>"
-                class="post_anchor"
-            ></a>
 
             <input
                 type="checkbox"
@@ -705,18 +732,9 @@ $op =
             <a
                 class="post_no"
                 id="post_no_<?= (int) $post['id'] ?>"
-                onclick="highlightReply(<?= (int) $post['id'] ?>)"
-                href="/<?= rawurlencode($board['slug']) ?>/thread/<?= (int) $thread['id'] ?>#<?= (int) $post['id'] ?>"
+                href="/<?= rawurlencode($board['slug']) ?>/thread/<?= (int) $thread['id'] ?>#p<?= (int) $post['id'] ?>"
             >
-                No.
-            </a>
-
-            <a
-                class="post_no"
-                onclick="citeReply(<?= (int) $post['id'] ?>)"
-                href="#<?= (int) $post['id'] ?>"
-            >
-                <?= (int) $post['id'] ?>
+                No.<?= (int) $post['id'] ?>
             </a>
 
             <?php if (empty($thread['locked'])): ?>
@@ -732,96 +750,84 @@ $op =
 
             <?php endif; ?>
 
-            <!-- REPORT BUTTON STAYS DIRECTLY AFTER REPLY -->
-
             <a
                 href="#"
                 class="report-link"
                 data-post-id="<?= (int) $post['id'] ?>"
-                title="Report post"
             >
-                <img
-                    src="/img/report.png"
-                    alt="Report"
-                    class="report-button"
-                >
+                [Report]
             </a>
 
         </p>
 
-<?php if (!empty($post['file_name'])): ?>
+        <?php if (!empty($post['file_name'])): ?>
 
-        <?php
-        $fileInfo =
-            get_file_info(
-                (string) $post['file_name']
-            );
-        ?>
+            <?php
+            $fileInfo =
+                get_file_info(
+                    (string) $post['file_name']
+                );
+            ?>
 
-        <div class="file">
+            <div class="file">
 
-            <div class="fileinfo">
+                <div class="fileinfo">
+
+                    <a
+                        href="/<?= h(UPLOAD_URL . '/' . $post['file_name']) ?>"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        <?= h($fileInfo['name']) ?>
+                    </a>
+
+                    <?php if (
+                        $fileInfo['width'] !== null &&
+                        $fileInfo['height'] !== null
+                    ): ?>
+
+                        <span>
+                            (
+                            <?= (int) $fileInfo['width'] ?>
+                            x
+                            <?= (int) $fileInfo['height'] ?>
+                            ,
+                            <?= h(format_file_size($fileInfo['size'])) ?>
+                            )
+                        </span>
+
+                    <?php else: ?>
+
+                        <span>
+                            (
+                            <?= h(format_file_size($fileInfo['size'])) ?>
+                            )
+                        </span>
+
+                    <?php endif; ?>
+
+                </div>
 
                 <a
                     href="/<?= h(UPLOAD_URL . '/' . $post['file_name']) ?>"
                     target="_blank"
                     rel="noopener"
                 >
-                    <?= h($fileInfo['name']) ?>
+
+                    <img
+                        class="post-image"
+                        src="/<?= h(UPLOAD_URL . '/' . $post['file_name']) ?>"
+                        loading="lazy"
+                        alt=""
+                    >
+
                 </a>
-
-                <?php if (
-                    $fileInfo['width'] !== null &&
-                    $fileInfo['height'] !== null
-                ): ?>
-
-                    <span>
-                        (
-                        <?= (int) $fileInfo['width'] ?>
-                        x
-                        <?= (int) $fileInfo['height'] ?>
-                        ,
-                        <?= h(format_file_size($fileInfo['size'])) ?>
-                        )
-                    </span>
-
-                <?php else: ?>
-
-                    <span>
-                        (
-                        <?= h(format_file_size($fileInfo['size'])) ?>
-                        )
-                    </span>
-
-                <?php endif; ?>
 
             </div>
 
-            <a
-                href="/<?= h(UPLOAD_URL . '/' . $post['file_name']) ?>"
-                target="_blank"
-                rel="noopener"
-            >
+        <?php endif; ?>
 
-                <img
-                    class="post-image"
-                    src="/<?= h(UPLOAD_URL . '/' . $post['file_name']) ?>"
-                    loading="lazy"
-                    alt=""
-                >
-
-            </a>
-
-        </div>
-
-<?php endif; ?>
-
-        <div
-            class="body"
-            <?php if (!empty($post['file_name'])): ?>
-                style="clear:both"
-            <?php endif; ?>
-        >
+        <div class="body">
 
             <?= render_text(
                 (string) $post['body']
@@ -829,10 +835,11 @@ $op =
 
         </div>
 
+        <div class="post-clear"></div>
+
     </div>
 
 <?php endforeach; ?>
-
 
 <?php if ($postCount > 5): ?>
 
@@ -851,6 +858,7 @@ $op =
 
 <?php endif; ?>
 
+
 </div>
 
 <hr>
@@ -862,12 +870,18 @@ $op =
 <div class="pages">
 
 <a
-    href="/<?= rawurlencode($board['slug']) ?>/"
+href="/<?= rawurlencode($board['slug']) ?>/"
+
 >
-    [1]
+
+
+[1]
+
+
 </a>
 
 <?php if (count($threads) >= THREADS_PER_PAGE): ?>
+
 
 <a
     href="/<?= rawurlencode($board['slug']) ?>/?page=2"
@@ -875,10 +889,12 @@ $op =
     [Next]
 </a>
 
+
 <?php endif; ?>
 
 </div>
 
+<!-- REPORT MODAL -->
 
 <div
     id="report-modal"
@@ -887,6 +903,7 @@ $op =
 >
 
 <div class="report-box">
+
 
 <div class="report-header">
 
@@ -962,10 +979,10 @@ $op =
 
 </form>
 
-</div>
 
 </div>
 
+</div>
 
 <form
     action="/post.php"
@@ -975,6 +992,7 @@ $op =
     class="quick-reply"
     style="display:none;"
 >
+
 
 <table>
 
@@ -1083,6 +1101,7 @@ $op =
 
 </tr>
 
+
 </table>
 
 <?php if (!is_admin()): ?>
@@ -1097,26 +1116,28 @@ $op =
 <?php endif; ?>
 
 <input
-    type="hidden"
-    name="csrf"
-    value="<?= h(csrf_token()) ?>"
+type="hidden"
+name="csrf"
+value="<?= h(csrf_token()) ?>"
+
 >
 
 <input
-    type="hidden"
-    name="board"
-    value="<?= h($board['slug']) ?>"
+type="hidden"
+name="board"
+value="<?= h($board['slug']) ?>"
+
 >
 
 <input
-    type="hidden"
-    name="thread_id"
-    class="quick-reply-thread"
-    value=""
+type="hidden"
+name="thread_id"
+class="quick-reply-thread"
+value=""
+
 >
 
 </form>
-
 
 <style>
 
@@ -1280,103 +1301,19 @@ $op =
     box-sizing: border-box;
 }
 
-
-/*
- * WAKABA-STYLE REPLIES
- *
- * Replies intentionally have only a small 4px gap.
- * Any old <br> directly after a reply is hidden.
- */
-
 .thread > .post.reply {
-    display: block;
-    width: fit-content;
-    max-width: 95%;
-    margin: 0 0 4px 0;
-    padding: 8px;
     background: #e6e6ff;
     border: 1px solid #aaa;
-    box-sizing: border-box;
-    text-align: left;
-    clear: both;
-}
-
-/*
- * Prevent an extra line from appearing between replies.
- */
-
-.thread > .post.reply + br {
-    display: none !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.post_anchor {
-    display: block;
-    position: relative;
-    top: -20px;
-    visibility: hidden;
-}
-
-.thread > .post.reply .intro {
-    display: block;
-    margin: 0 0 4px 0;
-    padding: 0;
-    line-height: 18px;
-    white-space: normal;
-}
-
-.thread > .post.reply .intro label {
-    cursor: pointer;
-}
-
-.thread > .post.reply .delete {
-    margin-right: 3px;
-    vertical-align: middle;
-}
-
-.thread > .post.reply .file {
-    display: block;
-    float: left;
+    display: table;
     width: auto;
-    max-width: 250px;
-    margin: 0 15px 8px 0;
+    max-width: 95%;
+    padding: 8px;
+    margin-bottom: 5px;
     box-sizing: border-box;
 }
 
-.thread > .post.reply .fileinfo {
-    display: block;
-    clear: both;
-    font-size: 10px;
-    line-height: 14px;
-    margin-bottom: 3px;
-    text-align: left;
-    word-break: break-all;
-}
-
-.thread > .post.reply .post-image {
-    display: block;
-    width: auto !important;
-    height: auto !important;
-    max-width: 250px !important;
-    max-height: 400px !important;
-    cursor: zoom-in;
-}
-
-.thread > .post.reply .body {
-    display: block;
-    word-wrap: break-word;
-    overflow: visible;
-    min-height: 18px;
-}
-
-.thread > .post.reply .post-clear {
-    clear: both;
-}
-
-.thread > .post.reply .subject {
-    margin-right: 6px;
+.intro {
+    margin-bottom: 6px;
 }
 
 .subject {
@@ -1401,10 +1338,13 @@ $op =
 
 /*
  * COUNTRY FLAGS
+ *
+ * Only used on /int/.
  */
 
 .country-flag {
     display: inline-block;
+    width: 18px;
     height: 12px;
     margin-left: 4px;
     vertical-align: middle;
@@ -1434,35 +1374,7 @@ $op =
     margin-left: 3px;
 }
 
-
-/*
- * REPORT BUTTON
- */
-
-.report-link {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-.report-button {
-    display: inline-block;
-    width: auto;
-    height: 16px;
-    max-width: 100%;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
-.report-button:hover {
-    opacity: 0.8;
-}
-
-
-/*
- * OP FILE
- */
-
-.thread > .post.op .file {
+.thread > .post .file {
     float: left !important;
     width: auto !important;
     max-width: 250px !important;
@@ -1481,7 +1393,7 @@ $op =
     word-break: break-all;
 }
 
-.thread > .post.op .post-image {
+.thread > .post .post-image {
     display: block;
     width: auto !important;
     height: auto !important;
@@ -1818,19 +1730,9 @@ $op =
 
     .thread > .post.reply {
         max-width: calc(100vw - 20px);
-        margin-bottom: 4px;
     }
 
-    .thread > .post.reply .file {
-        max-width: 200px;
-    }
-
-    .thread > .post.reply .post-image {
-        max-width: 200px !important;
-        max-height: 350px !important;
-    }
-
-    .thread > .post.op .post-image {
+    .thread > .post .post-image {
         max-width: 200px !important;
         max-height: 350px !important;
     }
@@ -1850,7 +1752,6 @@ $op =
 }
 
 </style>
-
 
 <script>
 (function () {
@@ -1976,6 +1877,10 @@ $op =
     }
 
 
+    /*
+     * Escape closes the report dialog.
+     */
+
     document.addEventListener(
         'keydown',
         function (event) {
@@ -1993,7 +1898,7 @@ $op =
 
 
     /*
-     * BOARD REFRESH
+     * Board refresh
      */
 
     if (refreshButton) {
@@ -2024,7 +1929,7 @@ $op =
 
 
     /*
-     * QUICK REPLY
+     * Tinyboard-style Quick Reply
      */
 
     if (quickReply) {
@@ -2097,6 +2002,10 @@ $op =
                 threadId;
 
 
+            /*
+             * Copy values from the normal post form.
+             */
+
             if (originalForm) {
 
                 var originalName =
@@ -2148,17 +2057,8 @@ $op =
 
                 var target =
                     document.getElementById(
-                        'reply_' + postId
+                        'p' + postId
                     );
-
-                if (!target) {
-
-                    target =
-                        document.getElementById(
-                            'p' + postId
-                        );
-
-                }
 
 
                 if (target) {
@@ -2177,6 +2077,10 @@ $op =
                         1000
                     );
 
+
+                    /*
+                     * Keep the cited post visible.
+                     */
 
                     try {
 
@@ -2208,6 +2112,10 @@ $op =
 
         }
 
+
+        /*
+         * Reply links
+         */
 
         document.querySelectorAll(
             '.reply-link'
@@ -2245,6 +2153,10 @@ $op =
         );
 
 
+        /*
+         * Close button
+         */
+
         if (closeButton) {
 
             closeButton.addEventListener(
@@ -2256,6 +2168,11 @@ $op =
 
         }
 
+
+        /*
+         * Keep regular form and Quick Reply fields
+         * synchronized.
+         */
 
         if (originalForm) {
 
@@ -2384,6 +2301,10 @@ $op =
         }
 
 
+        /*
+         * Close Quick Reply with Escape.
+         */
+
         document.addEventListener(
             'keydown',
             function (event) {
@@ -2398,6 +2319,10 @@ $op =
             }
         );
 
+
+        /*
+         * Simple dragging.
+         */
 
         var handle =
             quickReply.querySelector(
@@ -2533,6 +2458,11 @@ $op =
 
     }
 
+
+    /*
+     * Reload pages restored from browser
+     * back/forward cache.
+     */
 
     window.addEventListener(
         'pageshow',

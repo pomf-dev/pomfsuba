@@ -150,11 +150,11 @@ page_header('Home');
 <div class="jumbotron">
 
 <h1>
-    pomfIB
+    Pomfsuba~
 </h1>
 
 <p class="lead">
-    A simple PHP imageboard for anonymous discussion.
+    A simple PHP imageboard for anonymous discussion and very easy to install!
 </p>
 
 </div>
@@ -167,7 +167,7 @@ page_header('Home');
 
 <ul>
 
-```
+
 <?php foreach ($boards as $board): ?>
 
     <?php
@@ -199,7 +199,7 @@ page_header('Home');
     </li>
 
 <?php endforeach; ?>
-```
+
 
 </ul>
 
@@ -228,7 +228,7 @@ page_header('Home');
 
 <div id="divLatestImages">
 
-```
+
 <?php if (!empty($latest_images)): ?>
 
     <div class="latest-images">
@@ -293,7 +293,7 @@ page_header('Home');
     </div>
 
 <?php endif; ?>
-```
+
 
 </div>
 

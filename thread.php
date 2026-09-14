@@ -15,82 +15,6 @@ header(
 header('Pragma: no-cache');
 header('Expires: 0');
 
-
-/*
- * ============================================================
- * FILE INFORMATION HELPERS
- * ============================================================
- */
-
-function format_file_size(?int $bytes): string
-{
-    if (
-        $bytes === null ||
-        $bytes < 0
-    ) {
-        return 'Unknown size';
-    }
-
-    if ($bytes < 1024) {
-        return $bytes . ' B';
-    }
-
-    if ($bytes < 1024 * 1024) {
-
-        return number_format(
-            $bytes / 1024,
-            1
-        ) . ' KB';
-    }
-
-    if ($bytes < 1024 * 1024 * 1024) {
-
-        return number_format(
-            $bytes / (1024 * 1024),
-            1
-        ) . ' MB';
-    }
-
-    return number_format(
-        $bytes / (1024 * 1024 * 1024),
-        1
-    ) . ' GB';
-}
-
-
-/*
- * ============================================================
- * COUNTRY FLAG HELPER
- * ============================================================
- *
- * Flags are ONLY used on /int/.
- *
- * The function scans /static/flags/ once per request and
- * matches the two-letter country code against the filename.
- *
- * Examples it can recognize:
- *
- * us.png
- * US.png
- * us.gif
- * US.gif
- * us.webp
- * us.svg
- *
- * It also accepts filenames such as:
- *
- * flag-us.png
- * flag_US.png
- *
- * ============================================================
- */
-
-/*
- * ============================================================
- * BASIC THREAD PARAMETERS
- * ============================================================
- */
-
 $boardSlug =
     trim(
         (string) (
@@ -111,13 +35,6 @@ if (
     exit('Thread not found.');
 }
 
-
-/*
- * ============================================================
- * BOARD
- * ============================================================
- */
-
 $board =
     get_board($boardSlug);
 
@@ -126,26 +43,15 @@ if (!$board) {
     exit('Board not found.');
 }
 
-
-/*
- * ============================================================
- * FLAGS
- * ============================================================
- *
- * Only /int/ gets country flags.
- * ============================================================
- */
-
 $showCountryFlags =
     strtolower(
         (string) $board['slug']
     ) === 'int';
 
-
 /*
- * ============================================================
- * REPORT CSRF TOKEN
- * ============================================================
+ * ------------------------------------------------------------
+ * Report system
+ * ------------------------------------------------------------
  */
 
 if (
@@ -161,22 +67,13 @@ if (
 $reportCsrf =
     $_SESSION['report_csrf'];
 
-
-/*
- * ============================================================
- * REPORT HANDLER
- * ============================================================
- */
-
 $reportMessage = '';
 $reportMessageType = '';
 
 if (
     $_SERVER['REQUEST_METHOD'] === 'POST' &&
-    (
-        isset($_POST['action']) &&
-        $_POST['action'] === 'report'
-    )
+    isset($_POST['action']) &&
+    $_POST['action'] === 'report'
 ) {
 
     $submittedCsrf =
@@ -263,6 +160,7 @@ if (
         if (
             strlen($reportDetails) > 2000
         ) {
+
             $reportDetails =
                 substr(
                     $reportDetails,
@@ -390,11 +288,10 @@ if (
     }
 }
 
-
 /*
- * ============================================================
- * THREAD
- * ============================================================
+ * ------------------------------------------------------------
+ * Load thread
+ * ------------------------------------------------------------
  */
 
 $stmt = db()->prepare(
@@ -418,11 +315,10 @@ if (!$thread) {
     exit('Thread not found.');
 }
 
-
 /*
- * ============================================================
- * POSTS
- * ============================================================
+ * ------------------------------------------------------------
+ * Load posts
+ * ------------------------------------------------------------
  */
 
 $stmt = db()->prepare(
@@ -440,13 +336,6 @@ $stmt->execute([
 $posts =
     $stmt->fetchAll();
 
-
-/*
- * ============================================================
- * PAGE HEADER
- * ============================================================
- */
-
 page_header(
     $board['name'] .
     ' - Thread ' .
@@ -457,23 +346,10 @@ page_header(
 
 <style>
 
-/*
- * ============================================================
- * THREAD PAGE
- * ============================================================
- */
-
 .thread-page {
     width: 100%;
     display: block;
 }
-
-
-/*
- * ============================================================
- * SITE BANNER
- * ============================================================
- */
 
 .site-banner {
     text-align: center;
@@ -487,13 +363,6 @@ page_header(
 .site-banner p {
     margin: 5px 0;
 }
-
-
-/*
- * ============================================================
- * BOARD HEADER
- * ============================================================
- */
 
 .board-header {
     text-align: center;
@@ -527,13 +396,6 @@ page_header(
     font-weight: bold;
 }
 
-
-/*
- * ============================================================
- * THREAD POSTS
- * ============================================================
- */
-
 .thread-posts {
     width: 100%;
     display: block;
@@ -546,78 +408,50 @@ page_header(
     vertical-align: top;
 }
 
-
 /*
- * ============================================================
- * OP
- * ============================================================
+ * OP remains full width.
  */
-
 .thread-posts .post.op {
-    display: flow-root;
-
+    display: block;
     width: 100%;
     max-width: none;
-
     margin: 8px 0;
     padding: 8px;
-
     background: transparent;
     border: 0;
-
     text-align: left;
-
     clear: both;
-    float: none;
 }
 
-
 /*
- * ============================================================
- * REPLIES
- * ============================================================
+ * Wakaba-style replies.
  */
-
 .thread-posts .post.reply {
-    display: table;
-
-    width: auto;
+    display: block;
+    width: fit-content;
     max-width: 95%;
-
-    margin: 8px 0;
+    margin: 0 0 4px 0;
     padding: 8px;
-
     background: #e6e6ff;
     border: 1px solid #aaa;
-
     box-sizing: border-box;
-
     text-align: left;
-
     clear: both;
 }
 
-
-/*
- * ============================================================
- * POST HEADER
- * ============================================================
- */
-
-.thread-posts .post-header {
+.thread-posts .post.reply + br {
     display: block;
+}
 
-    width: 100%;
-
+.thread-posts .intro {
+    display: block;
     margin: 0 0 8px;
     padding: 0;
-
-    text-align: left;
-
-    clear: both;
+    line-height: 18px;
+    white-space: normal;
 }
 
-.thread-posts .post-header label {
+.thread-posts .intro label {
     cursor: pointer;
 }
 
@@ -630,52 +464,31 @@ page_header(
     font-weight: bold;
 }
 
-
-/*
- * ============================================================
- * COUNTRY FLAG
- * ============================================================
- *
- * Only rendered for /int/.
- * ============================================================
- */
-
 .country-flag {
     display: inline-block;
-
-    width: 18px;
     height: 12px;
-
     margin-left: 4px;
-
     vertical-align: middle;
-
     object-fit: cover;
-
     border: 0;
 }
-
-
-/*
- * ============================================================
- * STAFF CAPCODE
- * ============================================================
- */
 
 .staff-capcode {
     color: #c6a0f6;
     font-weight: bold;
+    margin-left: 4px;
 }
-
-
-/*
- * ============================================================
- * POST DATE
- * ============================================================
- */
 
 .post-date {
     margin-left: 5px;
+}
+
+.post_anchor {
+    display: block;
+    position: relative;
+    top: -20px;
+    visibility: hidden;
+    height: 0;
 }
 
 .post_no {
@@ -690,49 +503,45 @@ page_header(
 }
 
 .report-link {
+    display: inline-block;
     margin-left: 3px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.report-button {
+    display: inline-block;
+    width: auto;
+    height: 16px;
+    max-width: 100%;
+    vertical-align: middle;
     cursor: pointer;
 }
 
+.report-button:hover {
+    opacity: 0.8;
+}
 
 /*
- * ============================================================
- * POST CONTENT
- * ============================================================
+ * File / body layout.
  */
-
 .thread-posts .post-content {
     display: flow-root;
-
     width: 100%;
     max-width: none;
-
     margin: 0;
     padding: 0;
-
     text-align: left;
 }
 
-
-/*
- * ============================================================
- * FILE INFORMATION
- * ============================================================
- */
-
 .thread-posts .post-content .fileinfo {
     display: block;
-
     width: auto;
-
     margin: 0 0 3px;
     padding: 0;
-
     font-size: 10px;
     line-height: 14px;
-
     text-align: left;
-
     word-break: break-all;
 }
 
@@ -744,155 +553,93 @@ page_header(
     white-space: normal;
 }
 
-
-/*
- * ============================================================
- * POST IMAGE
- * ============================================================
- */
-
 .thread-posts .post-content .post-image {
     display: block;
-
     float: left;
-
     width: auto;
     max-width: 250px;
-
     margin: 0 15px 8px 0;
     padding: 0;
-
     clear: none;
-
     text-align: left;
 }
 
 .thread-posts .post-content .post-image a {
     display: inline-block;
-
     width: auto;
-
     margin: 0;
     padding: 0;
-
     vertical-align: top;
 }
 
 .thread-posts .post-content .post-image img {
     display: block;
-
     width: auto;
     height: auto;
-
     max-width: 250px;
     max-height: 250px;
-
     margin: 0;
     padding: 0;
-
     cursor: zoom-in;
 }
 
-
-/*
- * ============================================================
- * POST BODY
- * ============================================================
- */
-
-.thread-posts .post-content .post-body {
+.thread-posts .post-content .post-body,
+.thread-posts .post-content .body {
     display: block;
-
     width: auto;
     max-width: none;
-
     margin: 0;
     padding: 0;
-
     clear: none;
     float: none;
-
     text-align: left;
-
     word-wrap: break-word;
     overflow-wrap: anywhere;
 }
 
-
-/*
- * ============================================================
- * EXPANDED IMAGE
- * ============================================================
- */
+.thread-posts .post.reply .body {
+    min-height: 18px;
+}
 
 .post-image img.expanded {
     width: auto !important;
     height: auto !important;
-
     max-width: none !important;
     max-height: none !important;
-
     cursor: zoom-out;
-
     position: relative;
     z-index: 10;
 }
-
-
-/*
- * ============================================================
- * HIGHLIGHT
- * ============================================================
- */
 
 .post-highlight {
     outline: 2px solid #f00;
     outline-offset: 2px;
 }
 
-
 /*
- * ============================================================
- * REPORT
- * ============================================================
+ * Report dialog.
  */
-
 .report-dialog {
     position: fixed;
-
     left: 50%;
     top: 50%;
-
-    transform: translate(
-        -50%,
-        -50%
-    );
-
+    transform: translate(-50%, -50%);
     width: 360px;
     max-width: calc(100vw - 20px);
-
     z-index: 50000;
-
     background: #e6e6ff;
     border: 1px solid #777;
-
     box-shadow:
         0 4px 20px rgba(0, 0, 0, .35);
-
     padding: 0;
-
     box-sizing: border-box;
 }
 
 .report-dialog-header {
     padding: 5px 8px;
-
     background: #d9d9f2;
-
     border-bottom: 1px solid #999;
-
     font-weight: bold;
-
     cursor: move;
 }
 
@@ -902,27 +649,21 @@ page_header(
 
 .report-dialog-body label {
     display: block;
-
     margin-bottom: 4px;
-
     font-weight: bold;
 }
 
 .report-dialog-body select,
 .report-dialog-body textarea {
     display: block;
-
     width: 100%;
     max-width: 100%;
-
     box-sizing: border-box;
-
     margin-bottom: 10px;
 }
 
 .report-dialog-body textarea {
     min-height: 80px;
-
     resize: vertical;
 }
 
@@ -936,42 +677,29 @@ page_header(
 
 .report-close {
     float: right;
-
     border: 0;
     background: transparent;
-
     font-size: 18px;
     line-height: 16px;
-
     padding: 0 3px;
-
     cursor: pointer;
 }
 
 .report-overlay {
     position: fixed;
-
     inset: 0;
-
     z-index: 49999;
-
     background: rgba(0, 0, 0, .25);
 }
 
 .report-message {
     width: 100%;
     max-width: 750px;
-
     margin: 10px auto;
-
     padding: 7px 10px;
-
     box-sizing: border-box;
-
     border: 1px solid #999;
-
     text-align: center;
-
     font-weight: bold;
 }
 
@@ -983,41 +711,20 @@ page_header(
     background: #f2dddd;
 }
 
-
 /*
- * ============================================================
- * LOCKED THREAD
- * ============================================================
+ * Reply form.
+ * This remains the same style as the canonical thread reply form.
  */
-
-.thread-locked {
-    text-align: center;
-
-    margin: 20px auto;
-
-    font-weight: bold;
-}
-
-
-/*
- * ============================================================
- * REPLY FORM
- * ============================================================
- */
-
 .reply-form-container {
     width: 100%;
     max-width: 750px;
-
     margin: 20px auto;
-
     clear: both;
 }
 
 .reply-form {
     width: fit-content;
     max-width: 100%;
-
     margin-left: auto;
     margin-right: auto;
 }
@@ -1025,14 +732,12 @@ page_header(
 .reply-form textarea {
     width: 600px;
     max-width: 100%;
-
     box-sizing: border-box;
 }
 
 .reply-form input[type="text"] {
     width: 300px;
     max-width: 100%;
-
     box-sizing: border-box;
 }
 
@@ -1044,13 +749,9 @@ page_header(
     margin-right: 5px;
 }
 
-
 /*
- * ============================================================
- * MARKUP
- * ============================================================
+ * Markup.
  */
-
 .markup-greentext {
     color: #789922;
 }
@@ -1067,7 +768,6 @@ page_header(
 .markup-moe {
     color: #ff69b4;
     font-weight: bold;
-
     text-shadow:
         0 0 2px rgba(255, 105, 180, .35);
 }
@@ -1079,11 +779,8 @@ page_header(
 .markup-spoiler {
     color: transparent;
     background: #000;
-
     cursor: pointer;
-
     padding: 0 2px;
-
     border-radius: 1px;
 }
 
@@ -1094,75 +791,52 @@ page_header(
 .markup-spoiler-demo {
     background: #000;
     color: #000;
-
     padding: 0 3px;
 }
 
 .markup-code {
     display: block;
-
     white-space: pre-wrap;
-
     font-family: monospace;
     font-size: 12px;
     line-height: 1.3;
-
     background: #eee;
     border: 1px solid #aaa;
-
     padding: 8px;
     margin: 4px 0;
-
     overflow-x: auto;
-
     text-align: left;
-
     text-shadow: none;
 }
 
 .markup-aa {
     display: block;
-
     white-space: pre;
-
     font-family: monospace;
     font-size: 12px;
     line-height: 1.1;
-
     margin: 4px 0;
-
     overflow-x: auto;
-
     text-align: left;
-
     text-shadow: none;
 }
-
-
-/*
- * ============================================================
- * MOBILE
- * ============================================================
- */
 
 @media (max-width: 700px) {
 
     .thread-posts .post.op {
         width: 100%;
         max-width: 100%;
-
         padding: 6px;
     }
 
     .thread-posts .post.reply {
-        display: table;
-
+        display: block;
+        width: fit-content;
         max-width: 98%;
     }
 
     .thread-posts .post-content .post-image {
         max-width: 200px;
-
         margin-right: 10px;
         margin-bottom: 6px;
     }
@@ -1193,7 +867,6 @@ page_header(
 
     .thread-posts .post-content .post-image {
         max-width: 150px;
-
         margin-right: 8px;
     }
 
@@ -1209,67 +882,57 @@ page_header(
 
 <?php if ($reportMessage !== ''): ?>
 
-
 <div
     class="report-message <?= h($reportMessageType) ?>"
 >
     <?= h($reportMessage) ?>
 </div>
 
-
 <?php endif; ?>
 
 <div class="site-banner">
 
+    <h1>
+        <?= h(SITE_TITLE) ?>
+    </h1>
 
-<h1>
-    <?= h(SITE_TITLE) ?>
-</h1>
-
-<p>
-    anonymous imageboard
-</p>
-
+    <p>
+        anonymous imageboard
+    </p>
 
 </div>
 
 <div class="board-header">
 
+    <h2>
+        <a
+            href="/<?= rawurlencode($board['slug']) ?>/"
+        >
+            /<?= h($board['slug']) ?>/
+        </a>
+    </h2>
 
-<h2>
+    <div class="thread-meta">
+        Thread #<?= (int) $thread['id'] ?>
+    </div>
 
-    <a
-        href="/<?= rawurlencode($board['slug']) ?>/"
-    >
-        /<?= h($board['slug']) ?>/
-    </a>
+    <div class="thread-controls">
 
-</h2>
+        <button
+            type="button"
+            id="thread-refresh"
+        >
+            Refresh
+        </button>
 
-<div class="thread-meta">
+        <button
+            type="button"
+            id="thread-auto-reload"
+        >
+            Auto Reload: OFF
+        </button>
 
-    Thread #<?= (int) $thread['id'] ?>
-
-</div>
-
-<div class="thread-controls">
-
-    <button
-        type="button"
-        id="thread-refresh"
-    >
-        Refresh
-    </button>
-
-    <button
-        type="button"
-        id="thread-auto-reload"
-    >
-        Auto Reload: OFF
-    </button>
-
-</div>
-
+    </div>
 
 </div>
 
@@ -1283,14 +946,15 @@ page_header(
     as $index => $post
 ): ?>
 
+<?php if ($index === 0): ?>
 
 <div
-    class="post <?= $index === 0 ? 'op' : 'reply' ?>"
+    class="post op"
     id="p<?= (int) $post['id'] ?>"
     data-post-id="<?= (int) $post['id'] ?>"
 >
 
-    <div class="post-header">
+    <div class="intro">
 
         <input
             type="checkbox"
@@ -1304,68 +968,65 @@ page_header(
         >
 
             <span class="post-name">
-
                 <?= h(
                     !empty($post['name'])
                         ? (string) $post['name']
                         : 'Anonymous'
                 ) ?>
+            </span>
 
-                <?php if (
-                    $showCountryFlags &&
-                    !empty($post['country_code'])
-                ): ?>
+            <?php if (
+                $showCountryFlags &&
+                !empty($post['country_code'])
+            ): ?>
 
-                    <?php
-                    $flagUrl =
-                        get_country_flag_url(
-                            (string) $post['country_code']
-                        );
-                    ?>
+                <?php
+                $flagUrl =
+                    get_country_flag_url(
+                        (string) $post['country_code']
+                    );
+                ?>
 
-                    <?php if ($flagUrl !== null): ?>
+                <?php if ($flagUrl !== null): ?>
 
-                        <img
-                            class="country-flag"
-                            src="<?= h($flagUrl) ?>"
-                            alt="<?= h(
-                                strtoupper(
-                                    (string) $post['country_code']
-                                )
-                            ) ?>"
-                            title="<?= h(
-                                strtoupper(
-                                    (string) $post['country_code']
-                                )
-                            ) ?>"
-                            loading="lazy"
-                        >
-
-                    <?php endif; ?>
-
-                <?php endif; ?>
-
-
-                <?php if (
-                    isset($post['capcode']) &&
-                    (string) $post['capcode'] === 'Staff'
-                ): ?>
-
-                    <span class="staff-capcode">
-                        ## Staff
-                    </span>
+                    <img
+                        class="country-flag"
+                        src="<?= h($flagUrl) ?>"
+                        alt="<?= h(
+                            strtoupper(
+                                (string) $post['country_code']
+                            )
+                        ) ?>"
+                        title="<?= h(
+                            strtoupper(
+                                (string) $post['country_code']
+                            )
+                        ) ?>"
+                        loading="lazy"
+                    >
 
                 <?php endif; ?>
 
+            <?php endif; ?>
+
+            <?php if (
+                isset($post['capcode']) &&
+                (string) $post['capcode'] === 'Staff'
+            ): ?>
+
+                <span class="staff-capcode">
+                    ## Staff
+                </span>
+
+            <?php endif; ?>
+
+            <span class="post-date">
+                <?= h(
+                    (string) $post['created_at']
+                ) ?>
             </span>
 
         </label>
-
-        <span class="post-date">
-            <?= h(
-                (string) $post['created_at']
-            ) ?>
-        </span>
 
         <a
             class="post_no"
@@ -1392,23 +1053,20 @@ page_header(
             href="#"
             class="report-link"
             data-post-id="<?= (int) $post['id'] ?>"
-            data-thread-id="<?= (int) $thread['id'] ?>"
+            title="Report post"
         >
-            [Report]
+            <img
+                src="/img/report.png"
+                alt="Report"
+                class="report-button"
+            >
         </a>
 
     </div>
 
-
     <div class="post-content">
 
         <?php
-        /*
-         * Use file_name first.
-         *
-         * Keep the image column as a fallback so older
-         * posts/images continue working.
-         */
         $imageName = '';
 
         if (!empty($post['file_name'])) {
@@ -1423,13 +1081,9 @@ page_header(
         }
         ?>
 
-
         <?php if ($imageName !== ''): ?>
 
             <?php
-            /*
-             * Get filename, dimensions and file size.
-             */
             $fileInfo =
                 get_file_info(
                     $imageName
@@ -1438,10 +1092,6 @@ page_header(
 
             <div class="post-image">
 
-                <!--
-                     File information intentionally appears
-                     ABOVE the image.
-                -->
                 <div class="fileinfo">
 
                     <a
@@ -1493,7 +1143,6 @@ page_header(
 
                 </div>
 
-
                 <a
                     href="/<?= h(
                         UPLOAD_URL .
@@ -1520,8 +1169,7 @@ page_header(
 
         <?php endif; ?>
 
-
-        <div class="post-body">
+        <div class="body">
 
             <?= render_text(
                 (string) $post['body']
@@ -1533,13 +1181,263 @@ page_header(
 
 </div>
 
+<?php else: ?>
+
+<div
+    class="post reply"
+    id="reply_<?= (int) $post['id'] ?>"
+    data-post-id="<?= (int) $post['id'] ?>"
+>
+
+    <p class="intro">
+
+        <a
+            id="<?= (int) $post['id'] ?>"
+            class="post_anchor"
+        ></a>
+
+        <input
+            type="checkbox"
+            class="delete post-delete"
+            name="delete_<?= (int) $post['id'] ?>"
+            id="delete_<?= (int) $post['id'] ?>"
+        >
+
+        <label
+            for="delete_<?= (int) $post['id'] ?>"
+        >
+
+            <span class="post-name">
+                <?= h(
+                    !empty($post['name'])
+                        ? (string) $post['name']
+                        : 'Anonymous'
+                ) ?>
+            </span>
+
+            <?php if (
+                $showCountryFlags &&
+                !empty($post['country_code'])
+            ): ?>
+
+                <?php
+                $flagUrl =
+                    get_country_flag_url(
+                        (string) $post['country_code']
+                    );
+                ?>
+
+                <?php if ($flagUrl !== null): ?>
+
+                    <img
+                        class="country-flag"
+                        src="<?= h($flagUrl) ?>"
+                        alt="<?= h(
+                            strtoupper(
+                                (string) $post['country_code']
+                            )
+                        ) ?>"
+                        title="<?= h(
+                            strtoupper(
+                                (string) $post['country_code']
+                            )
+                        ) ?>"
+                        loading="lazy"
+                    >
+
+                <?php endif; ?>
+
+            <?php endif; ?>
+
+            <?php if (
+                isset($post['capcode']) &&
+                (string) $post['capcode'] === 'Staff'
+            ): ?>
+
+                <span class="staff-capcode">
+                    ## Staff
+                </span>
+
+            <?php endif; ?>
+
+            <span class="post-date">
+                <?= h(
+                    (string) $post['created_at']
+                ) ?>
+            </span>
+
+        </label>
+
+        &nbsp;
+
+        <a
+            class="post_no"
+            id="post_no_<?= (int) $post['id'] ?>"
+            onclick="highlightReply(<?= (int) $post['id'] ?>)"
+            href="#<?= (int) $post['id'] ?>"
+        >
+            No.
+        </a>
+
+        <a
+            class="post_no"
+            onclick="citeReply(<?= (int) $post['id'] ?>)"
+            href="#<?= (int) $post['id'] ?>"
+        >
+            <?= (int) $post['id'] ?>
+        </a>
+
+        <?php if (empty($thread['locked'])): ?>
+
+            <a
+                href="#reply"
+                class="reply-link"
+                data-thread-id="<?= (int) $thread['id'] ?>"
+                data-post-id="<?= (int) $post['id'] ?>"
+            >
+                [Reply]
+            </a>
+
+        <?php endif; ?>
+
+        <!-- KEEP REPORT IMAGE DIRECTLY AFTER [Reply] -->
+        <a
+            href="#"
+            class="report-link"
+            data-post-id="<?= (int) $post['id'] ?>"
+            title="Report post"
+        >
+            <img
+                src="/img/report.png"
+                alt="Report"
+                class="report-button"
+            >
+        </a>
+
+    </p>
+
+    <?php
+    $imageName = '';
+
+    if (!empty($post['file_name'])) {
+
+        $imageName =
+            (string) $post['file_name'];
+
+    } elseif (!empty($post['image'])) {
+
+        $imageName =
+            (string) $post['image'];
+    }
+    ?>
+
+    <?php if ($imageName !== ''): ?>
+
+        <?php
+        $fileInfo =
+            get_file_info(
+                $imageName
+            );
+        ?>
+
+        <div class="post-image">
+
+            <div class="fileinfo">
+
+                <a
+                    href="/<?= h(
+                        UPLOAD_URL .
+                        '/' .
+                        $imageName
+                    ) ?>"
+                    target="_blank"
+                    rel="noopener"
+                >
+                    <?= h(
+                        $fileInfo['name']
+                    ) ?>
+                </a>
+
+                <?php if (
+                    $fileInfo['width'] !== null &&
+                    $fileInfo['height'] !== null
+                ): ?>
+
+                    <span>
+                        (
+                        <?= (int) $fileInfo['width'] ?>
+                        x
+                        <?= (int) $fileInfo['height'] ?>
+                        ,
+                        <?= h(
+                            format_file_size(
+                                $fileInfo['size']
+                            )
+                        ) ?>
+                        )
+                    </span>
+
+                <?php else: ?>
+
+                    <span>
+                        (
+                        <?= h(
+                            format_file_size(
+                                $fileInfo['size']
+                            )
+                        ) ?>
+                        )
+                    </span>
+
+                <?php endif; ?>
+
+            </div>
+
+            <a
+                href="/<?= h(
+                    UPLOAD_URL .
+                    '/' .
+                    $imageName
+                ) ?>"
+                target="_blank"
+                rel="noopener"
+            >
+
+                <img
+                    src="/<?= h(
+                        UPLOAD_URL .
+                        '/' .
+                        $imageName
+                    ) ?>"
+                    alt=""
+                    loading="lazy"
+                >
+
+            </a>
+
+        </div>
+
+    <?php endif; ?>
+
+    <div class="body">
+
+        <?= render_text(
+            (string) $post['body']
+        ) ?>
+
+    </div>
+
+</div>
+
+<br>
+
+<?php endif; ?>
 
 <?php endforeach; ?>
 
 </div>
 
 <?php if (empty($thread['locked'])): ?>
-
 
 <div
     id="reply"
@@ -1669,24 +1567,15 @@ page_header(
 
 </div>
 
-
 <?php else: ?>
 
-
 <div class="thread-locked">
-
     This thread is locked.
-
 </div>
-
 
 <?php endif; ?>
 
 </div>
-
-<!-- =========================================================
-     REPORT DIALOG
-     ========================================================= -->
 
 <div
     id="report-overlay"
@@ -1703,146 +1592,142 @@ page_header(
     aria-labelledby="report-dialog-title"
 >
 
-
-<div
-    class="report-dialog-header"
-    id="report-dialog-title"
->
-
-    <button
-        type="button"
-        class="report-close"
-        id="report-close"
-        aria-label="Close"
-    >
-        ×
-    </button>
-
-    Report Post
-
-</div>
-
-<div class="report-dialog-body">
-
-    <form
-        method="post"
-        action=""
-        id="report-form"
+    <div
+        class="report-dialog-header"
+        id="report-dialog-title"
     >
 
-        <input
-            type="hidden"
-            name="action"
-            value="report"
+        <button
+            type="button"
+            class="report-close"
+            id="report-close"
+            aria-label="Close"
+        >
+            ×
+        </button>
+
+        Report Post
+
+    </div>
+
+    <div class="report-dialog-body">
+
+        <form
+            method="post"
+            action=""
+            id="report-form"
         >
 
-        <input
-            type="hidden"
-            name="report_csrf"
-            value="<?= h($reportCsrf) ?>"
-        >
-
-        <input
-            type="hidden"
-            name="board"
-            value="<?= h($board['slug']) ?>"
-        >
-
-        <input
-            type="hidden"
-            name="thread_id"
-            value="<?= (int) $thread['id'] ?>"
-        >
-
-        <input
-            type="hidden"
-            name="post_id"
-            id="report-post-id"
-            value=""
-        >
-
-        <label
-            for="report-reason"
-        >
-            Reason
-        </label>
-
-        <select
-            name="reason"
-            id="report-reason"
-            required
-        >
-
-            <option value="">
-                Select a reason...
-            </option>
-
-            <option value="spam">
-                Spam
-            </option>
-
-            <option value="illegal">
-                Illegal content
-            </option>
-
-            <option value="harassment">
-                Harassment
-            </option>
-
-            <option value="sexual_content">
-                Sexual content
-            </option>
-
-            <option value="malware">
-                Malware / malicious content
-            </option>
-
-            <option value="personal_information">
-                Personal information
-            </option>
-
-            <option value="other">
-                Other
-            </option>
-
-        </select>
-
-
-        <label
-            for="report-details"
-        >
-            Additional details
-        </label>
-
-        <textarea
-            name="details"
-            id="report-details"
-            maxlength="2000"
-            placeholder="Optional details..."
-        ></textarea>
-
-
-        <div class="report-dialog-buttons">
-
-            <button
-                type="button"
-                id="report-cancel"
+            <input
+                type="hidden"
+                name="action"
+                value="report"
             >
-                Cancel
-            </button>
 
-            <button
-                type="submit"
+            <input
+                type="hidden"
+                name="report_csrf"
+                value="<?= h($reportCsrf) ?>"
             >
-                Submit Report
-            </button>
 
-        </div>
+            <input
+                type="hidden"
+                name="board"
+                value="<?= h($board['slug']) ?>"
+            >
 
-    </form>
+            <input
+                type="hidden"
+                name="thread_id"
+                value="<?= (int) $thread['id'] ?>"
+            >
 
-</div>
+            <input
+                type="hidden"
+                name="post_id"
+                id="report-post-id"
+                value=""
+            >
 
+            <label
+                for="report-reason"
+            >
+                Reason
+            </label>
+
+            <select
+                name="reason"
+                id="report-reason"
+                required
+            >
+
+                <option value="">
+                    Select a reason...
+                </option>
+
+                <option value="spam">
+                    Spam
+                </option>
+
+                <option value="illegal">
+                    Illegal content
+                </option>
+
+                <option value="harassment">
+                    Harassment
+                </option>
+
+                <option value="sexual_content">
+                    Sexual content
+                </option>
+
+                <option value="malware">
+                    Malware / malicious content
+                </option>
+
+                <option value="personal_information">
+                    Personal information
+                </option>
+
+                <option value="other">
+                    Other
+                </option>
+
+            </select>
+
+            <label
+                for="report-details"
+            >
+                Additional details
+            </label>
+
+            <textarea
+                name="details"
+                id="report-details"
+                maxlength="2000"
+                placeholder="Optional details..."
+            ></textarea>
+
+            <div class="report-dialog-buttons">
+
+                <button
+                    type="button"
+                    id="report-cancel"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                >
+                    Submit Report
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
 
@@ -1851,13 +1736,6 @@ page_header(
 (function () {
 
     'use strict';
-
-
-    /*
-     * ========================================================
-     * THREAD CONTROLS
-     * ========================================================
-     */
 
     var AUTO_RELOAD_INTERVAL =
         10000;
@@ -1882,7 +1760,6 @@ page_header(
         document.getElementById(
             'thread-auto-reload'
         );
-
 
     function refreshThread()
     {
@@ -1909,7 +1786,6 @@ page_header(
         window.location.replace(url);
     }
 
-
     function stopAutoReload()
     {
         if (autoReloadTimer) {
@@ -1922,7 +1798,6 @@ page_header(
                 null;
         }
     }
-
 
     function scheduleAutoReload()
     {
@@ -1958,7 +1833,6 @@ page_header(
             );
     }
 
-
     function updateAutoReloadButton()
     {
         if (!autoReloadButton) {
@@ -1985,7 +1859,6 @@ page_header(
         }
     }
 
-
     function toggleAutoReload()
     {
         autoReloadEnabled =
@@ -2000,12 +1873,23 @@ page_header(
         }
     }
 
+    function getPostElement(postId)
+    {
+        var target =
+            document.getElementById(
+                'p' + postId
+            );
 
-    /*
-     * ========================================================
-     * HASH HIGHLIGHT
-     * ========================================================
-     */
+        if (!target) {
+
+            target =
+                document.getElementById(
+                    'reply_' + postId
+                );
+        }
+
+        return target;
+    }
 
     function highlightPostFromHash()
     {
@@ -2014,14 +1898,24 @@ page_header(
 
         if (
             !hash ||
-            !/^#p\d+$/.test(hash)
+            !/^#(?:p)?\d+$/.test(hash)
         ) {
             return;
         }
 
+        var postId =
+            hash.substring(1);
+
+        if (
+            postId.charAt(0) === 'p'
+        ) {
+            postId =
+                postId.substring(1);
+        }
+
         var target =
-            document.getElementById(
-                hash.substring(1)
+            getPostElement(
+                postId
             );
 
         if (!target) {
@@ -2059,13 +1953,94 @@ page_header(
         );
     }
 
+    /*
+     * These are kept global so the Wakaba-style
+     * onclick handlers work correctly.
+     */
+    window.highlightReply =
+        function (postId)
+        {
+            var target =
+                getPostElement(
+                    postId
+                );
+
+            if (!target) {
+                return;
+            }
+
+            document
+                .querySelectorAll(
+                    '.post-highlight'
+                )
+                .forEach(
+                    function (post) {
+
+                        post.classList.remove(
+                            'post-highlight'
+                        );
+
+                    }
+                );
+
+            target.classList.add(
+                'post-highlight'
+            );
+        };
+
+    window.citeReply =
+        function (postId)
+        {
+            if (!replyBody) {
+                return;
+            }
+
+            var quote =
+                '>>' +
+                postId;
+
+            if (
+                replyBody.value.trim() === ''
+            ) {
+
+                replyBody.value =
+                    quote +
+                    '\n\n';
+
+            } else {
+
+                replyBody.value =
+                    quote +
+                    '\n' +
+                    replyBody.value;
+            }
+
+            var reply =
+                document.getElementById(
+                    'reply'
+                );
+
+            if (reply) {
+
+                reply.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
+
+            }
+
+            replyBody.focus();
+
+            replyBody.selectionStart =
+                replyBody.value.length;
+
+            replyBody.selectionEnd =
+                replyBody.value.length;
+        };
 
     /*
-     * ========================================================
-     * REPORT DIALOG
-     * ========================================================
+     * Report system.
      */
-
     var reportDialog =
         document.getElementById(
             'report-dialog'
@@ -2101,13 +2076,13 @@ page_header(
             'report-details'
         );
 
-
     function openReportDialog(postId)
     {
         if (
             !reportDialog ||
             !reportOverlay ||
-            !reportPostId
+            !reportPostId ||
+            !postId
         ) {
             return;
         }
@@ -2136,7 +2111,6 @@ page_header(
         }
     }
 
-
     function closeReportDialog()
     {
         if (reportDialog) {
@@ -2150,19 +2124,22 @@ page_header(
         }
     }
 
-
-    /*
-     * ========================================================
-     * REPORT BUTTONS
-     * ========================================================
-     */
-
     document.addEventListener(
         'click',
         function (event) {
 
+            var target =
+                event.target;
+
+            if (
+                !target ||
+                !target.closest
+            ) {
+                return;
+            }
+
             var reportLink =
-                event.target.closest(
+                target.closest(
                     '.report-link'
                 );
 
@@ -2171,6 +2148,7 @@ page_header(
             }
 
             event.preventDefault();
+            event.stopPropagation();
 
             var postId =
                 reportLink.getAttribute(
@@ -2187,7 +2165,6 @@ page_header(
         }
     );
 
-
     if (reportClose) {
 
         reportClose.addEventListener(
@@ -2198,7 +2175,6 @@ page_header(
         );
 
     }
-
 
     if (reportCancel) {
 
@@ -2211,7 +2187,6 @@ page_header(
 
     }
 
-
     if (reportOverlay) {
 
         reportOverlay.addEventListener(
@@ -2223,10 +2198,6 @@ page_header(
 
     }
 
-
-    /*
-     * Escape closes report dialog.
-     */
     document.addEventListener(
         'keydown',
         function (event) {
@@ -2239,6 +2210,7 @@ page_header(
                 reportDialog &&
                 reportDialog.style.display !== 'none'
             ) {
+
                 closeReportDialog();
 
                 return;
@@ -2260,13 +2232,9 @@ page_header(
         }
     );
 
-
     /*
-     * ========================================================
-     * REFRESH
-     * ========================================================
+     * Refresh / auto reload.
      */
-
     if (refreshButton) {
 
         refreshButton.addEventListener(
@@ -2277,7 +2245,6 @@ page_header(
         );
 
     }
-
 
     if (autoReloadButton) {
 
@@ -2290,13 +2257,9 @@ page_header(
 
     }
 
-
     /*
-     * ========================================================
-     * REPLY LINKS
-     * ========================================================
+     * Reply links.
      */
-
     document.addEventListener(
         'click',
         function (event) {
@@ -2345,6 +2308,32 @@ page_header(
                     replyBody.value;
             }
 
+            var target =
+                getPostElement(
+                    postId
+                );
+
+            if (target) {
+
+                document
+                    .querySelectorAll(
+                        '.post-highlight'
+                    )
+                    .forEach(
+                        function (post) {
+
+                            post.classList.remove(
+                                'post-highlight'
+                            );
+
+                        }
+                    );
+
+                target.classList.add(
+                    'post-highlight'
+                );
+            }
+
             var reply =
                 document.getElementById(
                     'reply'
@@ -2370,13 +2359,9 @@ page_header(
         }
     );
 
-
     /*
-     * ========================================================
-     * POST NUMBER LINKS
-     * ========================================================
+     * Post number links.
      */
-
     document.addEventListener(
         'click',
         function (event) {
@@ -2397,7 +2382,7 @@ page_header(
 
             if (
                 href &&
-                /^#p\d+$/.test(href)
+                /^#(?:p)?\d+$/.test(href)
             ) {
 
                 event.preventDefault();
@@ -2413,13 +2398,9 @@ page_header(
         }
     );
 
-
     /*
-     * ========================================================
-     * IMAGE EXPANSION
-     * ========================================================
+     * Image expansion.
      */
-
     document.addEventListener(
         'click',
         function (event) {
@@ -2441,20 +2422,12 @@ page_header(
         }
     );
 
-
-    /*
-     * ========================================================
-     * HASH EVENTS
-     * ========================================================
-     */
-
     window.addEventListener(
         'hashchange',
         function () {
             highlightPostFromHash();
         }
     );
-
 
     window.addEventListener(
         'pageshow',
@@ -2472,7 +2445,6 @@ page_header(
         }
     );
 
-
     document.addEventListener(
         'visibilitychange',
         function () {
@@ -2488,13 +2460,6 @@ page_header(
 
         }
     );
-
-
-    /*
-     * ========================================================
-     * INITIAL STATE
-     * ========================================================
-     */
 
     updateAutoReloadButton();
 
