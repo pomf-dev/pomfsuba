@@ -1,16 +1,5 @@
 /*
- * quick-reply.js
- * https://github.com/savetheinternet/Tinyboard/blob/master/js/quick-reply.js
- *
- * Released under the MIT license
- * Copyright (c) 2013 Michael Save <savetheinternet@tinyboard.org>
- * Copyright (c) 2013-2014 Marcin Łabanowski <marcin@6irc.net>
- *
- * Usage:
- *   $config['additional_javascript'][] = 'js/jquery.min.js';
- *   $config['additional_javascript'][] = 'js/jquery-ui.custom.min.js'; // Optional; if you want the form to be draggable.
- *   $config['additional_javascript'][] = 'js/quick-reply.js';
- *
+ * Quick reply imported from vichan
  */
 
 (function() {
