@@ -7,10 +7,26 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 const POMFIB_NAME = 'pomfIB';
 
+/*
+ * ============================================================
+ * DATABASE CONFIGURATION
+ * ============================================================
+ *
+ * Configure these values for your installation.
+ *
+ * The database schema is provided in:
+ *
+ *     db.sql
+ *
+ * Do not use root for the application database connection.
+ *
+ * Do not commit a real database password to GitHub.
+ */
+
 const DB_HOST = '127.0.0.1';
 const DB_NAME = 'pomfib';
 const DB_USER = 'pomfib';
-const DB_PASS = 'pomfib_db_password';
+const DB_PASS = 'CHANGE_ME';
 
 const SITE_TITLE = 'pomfIB';
 
@@ -113,25 +129,8 @@ function ip_hash(): string
  * ============================================================
  * COUNTRY LOOKUP
  * ============================================================
- *
- * Used by /int/ to determine the poster's country.
- *
- * The visitor IP is NOT stored by this function.
- * Only the resulting two-letter country code is stored
- * in posts.country_code by post.php.
- *
- * Example results:
- *
- * US
- * CA
- * JP
- * DE
- * GB
- * BR
- *
- * If the lookup fails, NULL is returned and the post
- * continues normally without a flag.
  */
+
 function get_country_code_for_ip(string $ip): ?string
 {
     if (
@@ -196,21 +195,8 @@ function get_country_code_for_ip(string $ip): ?string
  * ============================================================
  * COUNTRY FLAG LOOKUP
  * ============================================================
- *
- * Looks inside:
- *
- * /static/flags/
- *
- * for the KohlNumbra flag matching the country code.
- *
- * Supports the extensions used by the downloaded flags.
- *
- * Examples:
- *
- * US -> /static/flags/us.svg
- * BR -> /static/flags/br.svg
- * UA -> /static/flags/ua.png
  */
+
 function get_country_flag_url(
     ?string $countryCode
 ): ?string {
@@ -265,9 +251,8 @@ function get_country_flag_url(
  * ============================================================
  * FILE INFORMATION
  * ============================================================
- *
- * Shared file metadata helper used by board.php and thread.php.
  */
+
 function get_file_info(?string $fileName): ?array
 {
     if (
@@ -320,42 +305,12 @@ function get_file_info(?string $fileName): ?array
     ];
 }
 
-
 /*
  * ============================================================
  * POST MARKUP RENDERER
-
  * ============================================================
- *
- * 8chan / LynxChan-style markup:
- *
- * > greentext
- *
- * '''bold'''
- *
- * ''italic''
- *
- * __underline__
- *
- * ~~strikethrough~~
- *
- * ==red text==
- *
- * [spoiler]spoiler[/spoiler]
- *
- * [doom]doom[/doom]
- *
- * [moe]moe[/moe]
- *
- * [code]code[/code]
- *
- * [aa]ASCII art[/aa]
- *
- * (((echo text)))
- *
- * User input is HTML escaped BEFORE markup is processed.
- * This prevents arbitrary HTML injection.
  */
+
 function render_text(string $text): string
 {
     $text = h($text);
@@ -734,15 +689,19 @@ function page_footer(): void
 
     </div>
 
-<footer class="site-footer">
-    <a href="https://github.com/pomf-dev/pomfsuba" target="_blank" rel="noopener noreferrer">
-        pomfsuba on GitHub
-    </a>
-</footer>
+    <footer class="site-footer">
+        <a
+            href="https://github.com/pomf-dev/pomfsuba"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            pomfsuba on GitHub
+        </a>
+    </footer>
+
     </body>
 
     </html>
 
     <?php
 }
-
